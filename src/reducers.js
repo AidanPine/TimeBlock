@@ -20,7 +20,7 @@ store design:
  */
 
 
-
+let blockID = 0;
 
 const initialUserState = {
     profile: {

@@ -2,8 +2,14 @@ import React from 'react';
 import { Grid, IconButton, Typography } from '@mui/material';
 import logo from './assets/tb-icon.png';
 import HomeIcon from '@mui/icons-material/Home';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+    const user = useSelector((state) => state.profile.profile);
+    const navigate = useNavigate();
+    const handleClick = () => {navigate("/")};
+
     return (
         <div className="App">
             <Grid container spacing={3} align="right" style={{marginTop: "0px"}}>
@@ -14,7 +20,7 @@ const Dashboard = () => {
                     <Typography variant="h5" color="#ffffff">Dashboard</Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={1} align="right">
-                    <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#eeeeee", height: "35px", width: "35px", backgroundColor: "#8C52FF", marginRight: "20px"}} href="/" >
+                    <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#eeeeee", height: "35px", width: "35px", backgroundColor: "#8C52FF", marginRight: "20px"}} onClick={handleClick} >
                         {
                             // Go to home
                         }
@@ -22,6 +28,12 @@ const Dashboard = () => {
                     </IconButton>
                 </Grid>
             </Grid>
+            <Typography variant={'h5'}>
+                Username: {user.username}
+            </Typography>
+            <Typography variant={'h5'}>
+                Password: {user.password}
+            </Typography>
         </div>
     );
 }

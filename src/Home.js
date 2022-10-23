@@ -1,10 +1,26 @@
 import React from 'react';
-import { Typography, Grid, Button } from '@mui/material';
+import { Typography, Grid, Button, Dialog, DialogTitle, TextField} from '@mui/material';
 import './styles/App.css';
 import logo from './assets/TimeBlock.png';
 import { Link } from "react-router-dom";
+import Login from "./Login";
+import { useDispatch } from "react-redux";
+import { ActionCreators } from "./actions";
+
 
 const Home = () => {
+    const [open, setOpen] = React.useState(false);
+
+    const dispatch = useDispatch();
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     return (
         <div className="App">
             <Grid container spacing={3}>
@@ -13,21 +29,20 @@ const Home = () => {
                     <img src={logo} alt="logo" style={{marginLeft: "10px", width: "120px", boxShadow: "0px 0px 25px 20px rgba(0,0,0,0.97)"}} />
                 </Grid>
                 <Grid item xs={6} sm={6} md={8} lg={8}>
-                    {
-                        // Disabled for now, once Redux is implemented will add dialog
-                    }
-                    <Button 
-                        variant="contained" 
+                    <Button
+                        variant="contained"
                         style={{color: "#8C52FF", backgroundColor: "#ffffff", fontWeight: "bold", textTransform: "none", marginLeft: "10px", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "right"}}
-                        disabled
+                        onClick={handleClickOpen}
                         sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
                         Log In
-                    </Button> 
+                    </Button>
+                    <Dialog open={open} onClose={handleClose}>
+                        <DialogTitle>Login</DialogTitle>
+                        <Login></Login>
+                    </Dialog>
                 </Grid>
                 <Grid item xs={6} sm={3} md={2} lg={2}>
-                    {
-                        // Disabled for now, once Redux is implemented will add dialog
-                    }
+
                     <Button 
                         variant="outlined" 
                         style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
