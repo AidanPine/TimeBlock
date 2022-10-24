@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const Login = () => {
-    let state = {username: "", password: ""};
+const Signup = () => {
+    let state = {username: "", email: "", password: ""};
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Login = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        dispatch(ActionCreators.login({username: state.username, password: state.password}));
+        dispatch(ActionCreators.signup({username: state.username, email: state.email, password: state.password}));
         navigate("/Dashboard");
     }
     return (
@@ -34,6 +34,17 @@ const Login = () => {
                         fullWidth
                         required
                     />
+                </Grid>
+                <Grid item xs={1} />
+                <Grid item xs={1} />
+                <Grid item xs={10}>
+                    <TextField name='email' label={'email'} variant={'outlined'}
+                        onChange={(e) =>{
+                            state.email = e.target.value;
+                        }}
+                        fullWidth
+                        required
+                />
                 </Grid>
                 <Grid item xs={1} />
                 <Grid item xs={1} />
@@ -58,4 +69,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Signup;

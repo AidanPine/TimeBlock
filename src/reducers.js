@@ -20,7 +20,7 @@ store design:
  */
 
 
-let blockID = 0;
+// let blockID = 0;
 
 const initialUserState = {
     profile: {
@@ -59,6 +59,11 @@ export function profileReducer(state=initialUserState, action) {
             return {
                 ...state,
                 profile: initialUserState.profile
+            }
+        case Types.SIGNUP:
+            return {
+                ...state,
+                profile: action.payload.user
             }
         default:
             return state;

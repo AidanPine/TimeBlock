@@ -1,24 +1,34 @@
 import React from 'react';
-import { Typography, Grid, Button, Dialog, DialogTitle, TextField} from '@mui/material';
+import { Typography, Grid, Button, Dialog, DialogTitle } from '@mui/material';
 import './styles/App.css';
 import logo from './assets/TimeBlock.png';
 import { Link } from "react-router-dom";
 import Login from "./Login";
-import { useDispatch } from "react-redux";
-import { ActionCreators } from "./actions";
+import Signup from "./Signup";
+// import { useDispatch } from "react-redux"; commented so no warnings - implement soon
+// import { ActionCreators } from "./actions"; commented so no warnings - implement soon
 
 
 const Home = () => {
-    const [open, setOpen] = React.useState(false);
+    const [openLogin, setOpenLogin] = React.useState(false);
+    const [openSignup, setOpenSignup] = React.useState(false);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch(); commented so no warnings - implement soon
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleOpenLogin = () => {
+        setOpenLogin(true);
     }
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleCloseLogin = () => {
+        setOpenLogin(false);
+    }
+
+    const handleOpenSignup = () => {
+        setOpenSignup(true);
+    }
+
+    const handleCloseSignup = () => {
+        setOpenSignup(false);
     }
 
     return (
@@ -32,24 +42,31 @@ const Home = () => {
                     <Button
                         variant="contained"
                         style={{color: "#8C52FF", backgroundColor: "#ffffff", fontWeight: "bold", textTransform: "none", marginLeft: "10px", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "right"}}
-                        onClick={handleClickOpen}
+                        onClick={handleOpenLogin}
                         sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
                         Log In
                     </Button>
-                    <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>Login</DialogTitle>
+                    <Dialog open={openLogin} onClose={handleCloseLogin}>
+                        <DialogTitle style={{ fontWeight: 'bold', color: '#8C52FF'}} align="center">
+                            Log In
+                        </DialogTitle>
                         <Login></Login>
                     </Dialog>
                 </Grid>
                 <Grid item xs={6} sm={3} md={2} lg={2}>
-
                     <Button 
                         variant="outlined" 
                         style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
-                        disabled
+                        onClick={handleOpenSignup}
                         sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
                         Sign Up
                     </Button>
+                    <Dialog open={openSignup} onClose={handleCloseSignup}>
+                        <DialogTitle style={{ fontWeight: 'bold', color: '#8C52FF'}} align="center">
+                            Sign Up
+                        </DialogTitle>
+                        <Signup></Signup>
+                    </Dialog>
                 </Grid>
 
                 <Grid item xs={12} stlye={{height: "10px"}} />

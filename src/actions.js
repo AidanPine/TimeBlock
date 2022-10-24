@@ -9,5 +9,7 @@ export const ActionCreators = {
 
     logout: (user) => ({ type: Types.LOGOUT, payload: { user } }),
 
+    signup: (user) => ({ type: Types.SIGNUP, payload: { user } }),
+
     addEvent: (block) => ({ type: Types.ADD_EVENT, payload: { block } })
 }
