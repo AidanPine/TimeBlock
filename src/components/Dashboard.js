@@ -1,49 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Grid, IconButton, Typography, Box, Tabs, Tab } from '@mui/material';
 import logo from '../assets/tb-icon.png';
 import HomeIcon from '@mui/icons-material/Home';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-// TAB PANEL: FOR DISPLAYING DIFFERENT THINGS ON TABS
-// MOVE INTO OWN COMPONENT FILE
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-}
-
-// PROP TYPES FOR TAB PANEL
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-  
-// SET TAB INDEX TO
-function tabProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
+import { TabPanel, tabProps } from './TabPanel';
 
 const Dashboard = () => {
     const user = useSelector((state) => state.profile.profile);
@@ -52,7 +13,7 @@ const Dashboard = () => {
 
     const [tabValue, setTabValue] = React.useState(0);
 
-    const handleTabChange = (event, newTabValue) => {
+    const handleTabChange = (e, newTabValue) => {
         setTabValue(newTabValue);
     }
 
