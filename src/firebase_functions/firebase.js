@@ -3,7 +3,7 @@ import firebaseConfig from "./firebaseConfig";
 import app from 'firebase/app'
 import 'firebase/database';
 import { useDispatch } from 'react-redux';
-import { ActionCreators } from "./actions";
+import { ActionCreators } from "../redux_functions/actions";
 
 const FirebaseContext = createContext(null);
 export { FirebaseContext };

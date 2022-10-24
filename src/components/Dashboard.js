@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Typography, Box, Tabs, Tab } from '@mui/material';
-import logo from './assets/tb-icon.png';
+import logo from '../assets/tb-icon.png';
 import HomeIcon from '@mui/icons-material/Home';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

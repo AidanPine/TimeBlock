@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Grid, Button, Dialog, DialogTitle } from '@mui/material';
-import './styles/App.css';
-import logo from './assets/TimeBlock.png';
+import '../styles/App.css';
+import logo from '../assets/TimeBlock.png';
 import { Link } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
