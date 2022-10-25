@@ -94,15 +94,16 @@ const MonthCalendar = () => {
     // ...
     // 6 - Saturday
 
-    const [monthIndex, setMonthIndex] = React.useState(9);
-    const [currMonth, setCurrMonth] = React.useState(months[monthIndex]);
+    const [monthIndex, setMonthIndex] = React.useState(10);
+    //let monthIndex = 10;
+    //const [currMonth, setCurrMonth] = React.useState(months[monthIndex]);
     const [arrayOfDays, setArrayOfDays] = React.useState(Array(42));
-
     const [currYear, setCurrYear] = React.useState(2022);
 
-    const getDaysOfMonth = (month, year) => {
-        const firstDayOfWeek = new Date(year + "-" + month + "-01").getDay(); // to tell which day of the week to start at
-        const lastDay = new Date(year, month, 0).getDate(); // last number to end
+    const getDaysOfMonth = () => {
+        console.log(monthIndex,currYear);
+        const firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
+        const lastDay = new Date(currYear, monthIndex, 0).getDate(); // last number to end
         let updatedArrayOfDays = Array(42); // fill array with 42 empty values
         // based on days between Sunday to first day (lets say Thursday) we skip array at first 4 values
         let count = 1;
@@ -119,31 +120,25 @@ const MonthCalendar = () => {
     }
 
     const handleNextMonth = () => {
-        if (monthIndex !== 11) {
-            setCurrMonth(months[monthIndex+1]);
+        if (monthIndex < 12) {
             setMonthIndex(monthIndex + 1);
-            getDaysOfMonth(monthIndex, currYear);
-            console.log(monthIndex, currMonth);
         }
     }
 
     const handlePrevMonth = () => {
-        if (monthIndex !== 0) {
-            setCurrMonth(months[monthIndex-1]);
+        if (monthIndex > 1) {
             setMonthIndex(monthIndex - 1);
-            getDaysOfMonth(monthIndex, currYear);
-            console.log(monthIndex, currMonth);
         }
     }
 
     const handleChangeYear = e => {
         setCurrYear(e.target.value);
-        getDaysOfMonth(monthIndex, currYear);
+        //getDaysOfMonth();
     }
 
     React.useEffect(() => {
-        getDaysOfMonth(monthIndex+1, currYear);
-    }, []);
+        getDaysOfMonth();
+    }, [monthIndex, currYear]);
 
     return (
         <Grid container>
@@ -159,7 +154,7 @@ const MonthCalendar = () => {
                         </IconButton>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography variant="h5" style={{color: '#ffffff'}}>{currMonth}</Typography>
+                        <Typography variant="h5" style={{color: '#ffffff'}}>{months[monthIndex-1]}</Typography>
                     </Grid>
                     <Grid item xs={4}>
                         <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#8C52FF", height: "35px", width: "35px", backgroundColor: "#220f49"}} onClick={handleNextMonth} >
