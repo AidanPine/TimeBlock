@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
+import MonthCalendar from './MonthCalendar';
 
 const Dashboard = () => {
     const user = useSelector((state) => state.profile.profile);
@@ -45,15 +46,12 @@ const Dashboard = () => {
                     <Tab label="State Data"  style={{color: '#ffffff'}}  {...tabProps(3)} />
 
                 </Tabs>
-                
 
                 {
                     // TAB PANEL FOR MONTH
                 }
                 <TabPanel value={tabValue} index={0}>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Month
-                    </Typography>
+                    <MonthCalendar />
                 </TabPanel>
 
                 {
