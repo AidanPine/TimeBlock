@@ -27,7 +27,7 @@ const Login = () => {
             <Grid container spacing={3}>
                 <Grid item xs={1} />
                 <Grid item xs={10}>
-                    <TextField name='username' label={'username'} variant={'outlined'}
+                    <TextField name='username' label={'Username'} variant={'outlined'}
                         onChange={(e) =>{
                             state.username = e.target.value;
                         }}
@@ -38,7 +38,7 @@ const Login = () => {
                 <Grid item xs={1} />
                 <Grid item xs={1} />
                 <Grid item xs={10}>
-                    <TextField name='password' label={'password'} variant={'outlined'}
+                    <TextField name='password' label={'Password'} variant={'outlined'}
                         onChange={(e) =>{
                             state.password = e.target.value;
                         }}

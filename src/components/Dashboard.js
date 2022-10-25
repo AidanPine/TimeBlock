@@ -39,27 +39,18 @@ const Dashboard = () => {
             <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 
-                    <Tab label="Year"  style={{color: '#ffffff'}}  {...tabProps(0)} />
-                    <Tab label="Month"  style={{color: '#ffffff'}}  {...tabProps(1)} />
-                    <Tab label="Week"  style={{color: '#ffffff'}}  {...tabProps(2)} />
-                    <Tab label="Day"  style={{color: '#ffffff'}}  {...tabProps(3)} />
-                    <Tab label="State Data"  style={{color: '#ffffff'}}  {...tabProps(4)} />
+                    <Tab label="Month"  style={{color: '#ffffff'}}  {...tabProps(0)} />
+                    <Tab label="Week"  style={{color: '#ffffff'}}  {...tabProps(1)} />
+                    <Tab label="Day"  style={{color: '#ffffff'}}  {...tabProps(2)} />
+                    <Tab label="State Data"  style={{color: '#ffffff'}}  {...tabProps(3)} />
 
                 </Tabs>
                 
-                {
-                    // TAB PANEL FOR YEAR
-                }
-                <TabPanel value={tabValue} index={0}>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Year
-                    </Typography>
-                </TabPanel>
 
                 {
                     // TAB PANEL FOR MONTH
                 }
-                <TabPanel value={tabValue} index={1}>
+                <TabPanel value={tabValue} index={0}>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         Month
                     </Typography>
@@ -68,7 +59,7 @@ const Dashboard = () => {
                 {
                     // TAB PANEL FOR WEEK
                 }
-                <TabPanel value={tabValue} index={2}>
+                <TabPanel value={tabValue} index={1}>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         Week
                     </Typography>
@@ -77,7 +68,7 @@ const Dashboard = () => {
                 {
                     // TAB PANEL FOR DAY
                 }
-                <TabPanel value={tabValue} index={3}>
+                <TabPanel value={tabValue} index={2}>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         Day
                     </Typography>
@@ -86,7 +77,13 @@ const Dashboard = () => {
                 {
                     // TAB PANEL FOR STATE DATA
                 }
-                <TabPanel value={tabValue} index={4}>
+                <TabPanel value={tabValue} index={3}>
+                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
+                        First Name: {user.firstName}
+                    </Typography>
+                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
+                        Last Name: {user.lastName}
+                    </Typography>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         Username: {user.username}
                     </Typography>
