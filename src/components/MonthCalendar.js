@@ -2,10 +2,12 @@ import React from 'react';
 import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 const DOTWRow = () => {
     return (
         <Grid item container spacing={0} xs={12} justifyContent="center">
+            <Grid item xs={1} />
             <Grid item xs={1}>
                 <p style={{color: '#8c52ff'}}>S</p>
             </Grid>
@@ -32,17 +34,46 @@ const DOTWRow = () => {
 }
 
 const CalendarItem = (props) => {
-    const color = props.day.isInMonth ? "#000000" : "#aaaaaa";
+    let dateNum;
+    let color;
+    let circleColor = "#ffffff";
+    if (props.day) {
+        dateNum = props.day.date;
+        color = props.day.isInMonth ? "#000000" : "#aaaaaa";
+        if (props.day.isToday) {
+            color = "#ffffff";
+            circleColor = "#8c52ff";
+        }
+    } else {
+        return;
+    }
+
+    const handleClick = e => {
+        console.log(dateNum); // return day that is clicked on, soon take to day view of this day
+    }
 
     return (
-        <Paper style={{padding: '5px 80px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}}>{props.day.date ? props.day.date : '-'}</Paper>
+        <Paper style={{padding: '10px 90px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
+                {dateNum}
+            </div>
+        </Paper>
     );
 }
 
 const CalendarRow = (props) => {
+
+    const handleClick = e => {
+        console.log(props.days);
+    }
+
     return (
         <Grid item container spacing={0} xs={12} justifyContent="center">
-            
+            <Grid item xs={1}>
+                <IconButton style={{marginTop: '16px'}} size="large" onClick={handleClick}>
+                    <ArrowCircleRightIcon style={{color: '#ffffff'}} fontSize="inherit" />
+                </IconButton>
+            </Grid>
             <Grid item xs={1}>
                 <CalendarItem day={props.days[0]} />
             </Grid>
@@ -71,6 +102,13 @@ const CalendarRow = (props) => {
 
 const MonthCalendar = () => {
 
+    const today = new Date().getDate();
+    //console.log(today);
+    const currMonth = new Date().getMonth()+1;
+    //console.log(currMonth);
+    const thisYear = new Date().getFullYear();
+    //console.log(thisYear);
+
     // get current month by getting current month from date function
     const months = [
         'January',
@@ -96,37 +134,47 @@ const MonthCalendar = () => {
     // ...
     // 6 - Saturday
 
-    const [monthIndex, setMonthIndex] = React.useState(10);
-    //let monthIndex = 10;
-    //const [currMonth, setCurrMonth] = React.useState(months[monthIndex]);
-    const [arrayOfDays, setArrayOfDays] = React.useState(Array(42));
-    const [currYear, setCurrYear] = React.useState(2022);
+    const [monthIndex, setMonthIndex] = React.useState(currMonth); 
+    const [arrayOfDays, setArrayOfDays] = React.useState(Array(42)); // fill array with empty undefined elements
+    const [currYear, setCurrYear] = React.useState(thisYear); 
 
     const getDaysOfMonth = () => {
-        //console.log(monthIndex,currYear);
-        const firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
-        const lastDay = new Date(currYear, monthIndex, 0).getDate(); // last number to end
+        let firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
+        if (monthIndex < currMonth) {
+            if (firstDayOfWeek === 0) {
+                firstDayOfWeek = 6;
+            } else {
+                firstDayOfWeek--;
+            }
+        }
+        const lastDay = new Date(currYear, monthIndex, 0).getDate(); // last number to end, days of month
         let updatedArrayOfDays = Array(42); // fill array with 42 empty values
         // based on days between Sunday to first day (lets say Thursday) we skip array at first 4 values
         const lastMonth = monthIndex-1;
-        let firstDayOfLastMonth = new Date(currYear, lastMonth, 0).getDate(); // get last date of last month and count backwards to fill beginning of array
+        let lastDayOfLastMonth = new Date(currYear, lastMonth, 0).getDate(); // get last date of last month and count backwards to fill beginning of array
         for (let i = firstDayOfWeek; i >= 0 ; i--) {
             updatedArrayOfDays[i] = {
-                date: firstDayOfLastMonth,
+                date: lastDayOfLastMonth,
                 isInMonth: false,
+                isToday: false,
                 events: []
             }
-            firstDayOfLastMonth--;
+            lastDayOfLastMonth--;
         }
 
         let count = 1;
         for (let i = firstDayOfWeek+1; i < 42; i++) {
+            let isTodaysDate = false;
+            if (monthIndex === currMonth && count === today && currYear === thisYear) {
+                isTodaysDate = true;
+            }
             if (count > lastDay) {
                 break;
             } else {
                 updatedArrayOfDays[i] = {
                     date: count,
                     isInMonth: true,
+                    isToday: isTodaysDate,
                     events: []
                 }
                 count++;
@@ -138,6 +186,7 @@ const MonthCalendar = () => {
             updatedArrayOfDays[i] = {
                 date: newCount,
                 isInMonth: false,
+                isToday: false,
                 events: []
             }
             newCount++;
@@ -163,7 +212,6 @@ const MonthCalendar = () => {
 
     const handleChangeYear = e => {
         setCurrYear(e.target.value);
-        //getDaysOfMonth();
     }
 
     React.useEffect(() => {
@@ -255,6 +303,7 @@ const MonthCalendar = () => {
                     <CalendarRow days={arrayOfDays.slice(35, 42)} />
                 </Grid>
             </Grid>
+            <Grid item xs={12} style={{height: '100px'}} />
             
         </Grid>
     );
