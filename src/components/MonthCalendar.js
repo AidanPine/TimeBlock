@@ -32,8 +32,10 @@ const DOTWRow = () => {
 }
 
 const CalendarItem = (props) => {
+    const color = props.day.isInMonth ? "#000000" : "#aaaaaa";
+
     return (
-        <Paper style={{padding: '5px 80px 50px 10px', textAlign: 'center', borderRadius: '0px'}}>{props.day !== undefined ? props.day : "_"}</Paper>
+        <Paper style={{padding: '5px 80px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}}>{props.day.date ? props.day.date : '-'}</Paper>
     );
 }
 
@@ -101,20 +103,48 @@ const MonthCalendar = () => {
     const [currYear, setCurrYear] = React.useState(2022);
 
     const getDaysOfMonth = () => {
-        console.log(monthIndex,currYear);
+        //console.log(monthIndex,currYear);
         const firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
         const lastDay = new Date(currYear, monthIndex, 0).getDate(); // last number to end
         let updatedArrayOfDays = Array(42); // fill array with 42 empty values
         // based on days between Sunday to first day (lets say Thursday) we skip array at first 4 values
+        const lastMonth = monthIndex-1;
+        let firstDayOfLastMonth = new Date(currYear, lastMonth, 0).getDate(); // get last date of last month and count backwards to fill beginning of array
+        for (let i = firstDayOfWeek; i >= 0 ; i--) {
+            updatedArrayOfDays[i] = {
+                date: firstDayOfLastMonth,
+                isInMonth: false,
+                events: []
+            }
+            firstDayOfLastMonth--;
+        }
+
         let count = 1;
         for (let i = firstDayOfWeek+1; i < 42; i++) {
             if (count > lastDay) {
                 break;
             } else {
-                updatedArrayOfDays[i] = count;
+                updatedArrayOfDays[i] = {
+                    date: count,
+                    isInMonth: true,
+                    events: []
+                }
                 count++;
             }
         }
+
+        let newCount = 1;
+        for (let i = count + firstDayOfWeek; i < 42; i++) {
+            updatedArrayOfDays[i] = {
+                date: newCount,
+                isInMonth: false,
+                events: []
+            }
+            newCount++;
+        }
+
+        // now fill end of array with 1-n days, will never need to check date bc it will always be max a week
+        console.log(updatedArrayOfDays);
 
         setArrayOfDays(updatedArrayOfDays);
     }
