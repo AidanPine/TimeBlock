@@ -29,6 +29,7 @@ const DOTWRow = () => {
             <Grid item xs={1}>
                 <p style={{color: '#8c52ff'}}>S</p>
             </Grid>
+            <Grid item xs={1} />
         </Grid>
     );
 }
@@ -95,6 +96,7 @@ const CalendarRow = (props) => {
             <Grid item xs={1}>
                 <CalendarItem day={props.days[6]} />
             </Grid>
+            <Grid item xs={1} />
             
         </Grid>
     );
