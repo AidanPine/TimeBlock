@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
+import WeekCalendar from './WeekCalendar';
 
 const Dashboard = () => {
     const user = useSelector((state) => state.profile.profile);
@@ -58,9 +59,7 @@ const Dashboard = () => {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Week
-                    </Typography>
+                    <WeekCalendar />
                 </TabPanel>
 
                 {

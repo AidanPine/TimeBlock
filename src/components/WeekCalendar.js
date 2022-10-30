@@ -2,10 +2,9 @@ import React from 'react';
 import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import DOTWRow from './DOTWRow';
 
-const CalendarItem = (props) => {
+const DayItem = (props) => {
     let dateNum;
     let color;
     let circleColor = "#ffffff";
@@ -25,7 +24,7 @@ const CalendarItem = (props) => {
     }
 
     return (
-        <Paper style={{padding: '10px 90px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
+        <Paper style={{padding: '10px 90px 500px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
                 {dateNum}
             </div>
@@ -35,41 +34,36 @@ const CalendarItem = (props) => {
 
 const CalendarRow = (props) => {
 
-    const handleClick = e => {
-        console.log(props.days);
-    }
+    // const handleClick = e => {
+    //     console.log(props.days);
+    // }
 
     return (
-        <Grid item container spacing={0} xs={12} justifyContent="center">
+        
+        <React.Fragment>
             <Grid item xs={1}>
-                <IconButton style={{marginTop: '16px'}} size="large" onClick={handleClick}>
-                    <ArrowCircleRightIcon style={{color: '#ffffff'}} fontSize="inherit" />
-                </IconButton>
+                <DayItem day={props.days[0]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[0]} />
+                <DayItem day={props.days[1]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[1]} />
+                <DayItem day={props.days[2]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[2]} />
+                <DayItem day={props.days[3]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[3]} />
+                <DayItem day={props.days[4]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[4]} />
+                <DayItem day={props.days[5]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[5]} />
+                <DayItem day={props.days[6]} />
             </Grid>
-            <Grid item xs={1}>
-                <CalendarItem day={props.days[6]} />
-            </Grid>
-            <Grid item xs={1} />
             
-        </Grid>
+        </React.Fragment>
     );
 }
 
@@ -81,7 +75,48 @@ const MonthCalendar = () => {
     //console.log(currMonth);
     const thisYear = new Date().getFullYear();
     //console.log(thisYear);
+    // let firstDayOfMonth = 1;
+    let currWeek = 1;
+    for (let i = 0; i < 42; i++) {
+        if (today > 1 && today < i+7) {
+            console.log(currWeek);
+        } else if (i % 7 === 0) {
+            currWeek++;
+        }
+    }
 
+    let startWeekIndex = 0;
+    let endWeekIndex = 0;
+    switch (currWeek) {
+        case 0:
+            startWeekIndex = 0;
+            endWeekIndex = 7;
+            break;
+        case 1:
+            startWeekIndex = 7;
+            endWeekIndex = 14;
+            break;
+        case 2:
+            startWeekIndex = 14;
+            endWeekIndex = 21;
+            break;
+        case 3:
+            startWeekIndex = 21;
+            endWeekIndex = 28;
+            break;
+        case 4:
+            startWeekIndex = 28;
+            endWeekIndex = 35;
+            break;
+        case 5:
+            startWeekIndex = 35;
+            endWeekIndex = 42;
+            break;
+        default:
+            break;
+    }
+
+    //console.log(thisWeek);
     // get current month by getting current month from date function
     const months = [
         'January',
@@ -110,6 +145,8 @@ const MonthCalendar = () => {
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
     const [arrayOfDays, setArrayOfDays] = React.useState(Array(42)); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(thisYear); 
+    const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
+    const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
 
     const getDaysOfMonth = () => {
         let firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
@@ -171,16 +208,28 @@ const MonthCalendar = () => {
         setArrayOfDays(updatedArrayOfDays);
     }
 
-    const handleNextMonth = () => {
-        if (monthIndex < 12) {
+    const handleNextWeek = () => {
+        if (weekStartIndex < 35) {
+            setWeekStartIndex(weekStartIndex + 7);
+            setWeekEndIndex(weekEndIndex + 7);
+        } else if (weekStartIndex === 35) {
             setMonthIndex(monthIndex + 1);
+            setWeekStartIndex(0);
+            setWeekEndIndex(7);
         }
+        console.log(monthIndex, weekStartIndex, weekEndIndex);
     }
 
-    const handlePrevMonth = () => {
-        if (monthIndex > 1) {
+    const handlePrevWeek = () => {
+        if (weekStartIndex > 0) {
+            setWeekStartIndex(weekStartIndex - 7);
+            setWeekEndIndex(weekEndIndex - 7);
+        } else if (weekStartIndex === 0) {
             setMonthIndex(monthIndex - 1);
+            setWeekStartIndex(35);
+            setWeekEndIndex(42);
         }
+        //console.log(monthIndex, weekStartIndex, weekEndIndex);
     }
 
     const handleChangeYear = e => {
@@ -195,26 +244,8 @@ const MonthCalendar = () => {
         <Grid container>
             <Grid item container xs={12}>
                 <Grid item xs={4} />
-                <Grid item container xs={4} style={{marginTop: '10px'}}>
-                    <Grid item xs={4}>
-                        <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#8C52FF", height: "35px", width: "35px", backgroundColor: "#220f49"}} onClick={handlePrevMonth} >
-                            {
-                                // Go to prev month
-                            }
-                            <ArrowBackIosNewIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography variant="h5" style={{color: '#ffffff'}}>{months[monthIndex-1]}</Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#8C52FF", height: "35px", width: "35px", backgroundColor: "#220f49"}} onClick={handleNextMonth} >
-                            {
-                                // Go to next month
-                            }
-                            <ArrowForwardIosIcon />
-                        </IconButton>
-                    </Grid>
+                <Grid item xs={4}>
+                    <Typography variant="h5" style={{color: '#ffffff'}}>{months[monthIndex-1]}</Typography>
                 </Grid>
                 <Grid item xs={4} align="right">
                     <FormControl>
@@ -258,22 +289,19 @@ const MonthCalendar = () => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} />
+                <Grid item container spacing={0} xs={12} justifyContent="center">
+                    <Grid item xs={1}>
+                        <IconButton style={{marginTop: '16px'}} size="large" onClick={handlePrevWeek}>
+                            <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
+                        </IconButton>
+                    </Grid>
+                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} />
+                    <Grid item xs={1}>
+                        <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextWeek}>
+                            <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />
+                        </IconButton>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />
