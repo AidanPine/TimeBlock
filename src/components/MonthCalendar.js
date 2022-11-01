@@ -3,6 +3,14 @@ import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } fr
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+
+    }
+}
 
 const DOTWRow = () => {
     return (
@@ -311,4 +319,4 @@ const MonthCalendar = () => {
     );
 }
 
-export default MonthCalendar;
+export default connect(mapStateToProps)(MonthCalendar);

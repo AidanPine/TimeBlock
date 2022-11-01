@@ -1,4 +1,7 @@
 import { Types } from './actionTypes';
+import { combineReducers } from "redux";
+import { firestoreReducer } from 'redux-firestore';
+import { firebaseReducer } from 'react-redux-firebase';
 
 /*
 store design:
@@ -22,48 +25,40 @@ store design:
 
 // let blockID = 0;
 
-const initialUserState = {
-    profile: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        password: ''
-    }
+const initialAuthState = {
+    authError: null,
 };
 
 const initialBlocksState = {
     blocks: [
-
     ]
 };
 
-export function profileReducer(state=initialUserState, action) {
+export function authReducer(state=initialAuthState, action) {
     switch(action.type) {
-        case Types.LOGIN:
+        case Types.LOGIN_SUCCESS:
             return {
                 ...state,
-                profile: action.payload.user,
+                authError: null,
             }
-        case Types.ADD_USER:
+        case Types.LOGIN_FAILURE:
             return {
                 ...state,
-                profile: action.payload.user
-            }
-        case Types.UPDATE_USER:
-            return {
-                ...state,
-                profile: action.payload.user
+                authError: action.payload.error.message
             }
         case Types.LOGOUT:
             return {
                 ...state,
-                profile: initialUserState.profile
+                authError: null,
             }
         case Types.SIGNUP:
             return {
                 ...state,
-                profile: action.payload.user
+            }
+        case Types.SIGNUP_ERROR:
+            return {
+                ...state,
+                authError: action.payload.error.message
             }
         default:
             return state;
@@ -75,9 +70,17 @@ export function blocksReducer(state = initialBlocksState, action) {
         case Types.ADD_EVENT:
             return [
                 ...state,
+
                 action.payload.block
             ]
         default:
             return state;
     }
 }
+
+export const rootReducer = combineReducers({
+    auth: authReducer,
+    blocks: blocksReducer,
+    firebase: firebaseReducer,
+    firestore: firestoreReducer
+});

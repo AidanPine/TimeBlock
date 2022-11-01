@@ -1,26 +1,27 @@
 import React from 'react';
 import {Button, TextField, Grid} from '@mui/material';
-import { useDispatch } from "react-redux";
-import { ActionCreators } from "../redux_functions/actions";
+import { connect } from "react-redux";
+import { signUp } from "../redux_functions/actions";
 import { useNavigate } from 'react-router-dom';
+import {myFirebase} from "../firebase_functions/firebase";
 
 
+const Signup = (props) => {
+    let state = {firstName: "", lastName: "", username: "", email: ""};
 
-const Signup = () => {
-    let state = {firstName: "", lastName: "", username: "", email: "", password: ""};
-
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { authError } = props;
 
-    // function handleChange(event) {
-    //     state.username = event.state.username;
-    //     state.password = event.state.password;
-    // }
+
 
     function handleSubmit(event) {
         event.preventDefault();
-        dispatch(ActionCreators.signup({firstName: state.firstName, lastName: state.lastName, username: state.username, email: state.email, password: state.password}));
-        navigate("/Dashboard");
+        props.signUp(state);
+        myFirebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                navigate('/dashboard');
+            }
+        })
     }
     return (
         <form onSubmit={handleSubmit}>
@@ -80,13 +81,28 @@ const Signup = () => {
                 <Grid item xs={1} />
                 <Grid item xs={4} />
                 <Grid item xs={4}>
-                    <Button variant={'contained'} type={'submit'} fullWidth style={{backgroundColor: '#8C52FF', borderRadius: '20px'}}>Log In</Button>
+                    <Button variant={'contained'} type={'submit'} fullWidth style={{backgroundColor: '#8C52FF', borderRadius: '20px'}}>Sign Up</Button>
                 </Grid>
                 <Grid item xs={4} />
                 <Grid item xs={12} />
+                <div className="red-text center">
+                    { authError ? <p>{ authError }</p> : null}
+                </div>
             </Grid>            
         </form>
     )
 }
 
-export default Signup;
+const mapStateToProps = (state) => {
+    return {
+        authError: state.auth.authError
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signUp: (newUser) => dispatch(signUp(newUser))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
