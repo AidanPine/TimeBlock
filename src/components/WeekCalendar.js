@@ -3,6 +3,7 @@ import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } fr
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DOTWRow from './DOTWRow';
+import getMonthArray from '../data_functions/getMonthArray';
 
 const DayItem = (props) => {
     let dateNum;
@@ -70,53 +71,8 @@ const CalendarRow = (props) => {
 const MonthCalendar = () => {
 
     const today = new Date().getDate();
-    //console.log(today);
     const currMonth = new Date().getMonth()+1;
-    //console.log(currMonth);
     const thisYear = new Date().getFullYear();
-    //console.log(thisYear);
-    // let firstDayOfMonth = 1;
-    let currWeek = 1;
-    for (let i = 0; i < 42; i++) {
-        if (today > 1 && today < i+7) {
-            console.log(currWeek);
-        } else if (i % 7 === 0) {
-            currWeek++;
-        }
-    }
-
-    let startWeekIndex = 0;
-    let endWeekIndex = 0;
-    switch (currWeek) {
-        case 0:
-            startWeekIndex = 0;
-            endWeekIndex = 7;
-            break;
-        case 1:
-            startWeekIndex = 7;
-            endWeekIndex = 14;
-            break;
-        case 2:
-            startWeekIndex = 14;
-            endWeekIndex = 21;
-            break;
-        case 3:
-            startWeekIndex = 21;
-            endWeekIndex = 28;
-            break;
-        case 4:
-            startWeekIndex = 28;
-            endWeekIndex = 35;
-            break;
-        case 5:
-            startWeekIndex = 35;
-            endWeekIndex = 42;
-            break;
-        default:
-            break;
-    }
-
-    //console.log(thisWeek);
     // get current month by getting current month from date function
     const months = [
         'January',
@@ -133,17 +89,11 @@ const MonthCalendar = () => {
         'December'
     ];
 
-    // Get current month and year
-    // lets say year = 2022, 
-    // month = new Date().getMonth() + 1 -> to make it 10 (maybe 9 bc start at 0)
-    // firstDay = new Date(year + "-" + month + "-01").getDay();
-    // 0 - Sunday
-    // 1 - Monday
-    // ...
-    // 6 - Saturday
+    const { monthArray, startWeekIndex, endWeekIndex } = getMonthArray(today, currMonth, thisYear);
+
 
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
-    const [arrayOfDays, setArrayOfDays] = React.useState(Array(42)); // fill array with empty undefined elements
+    const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(thisYear); 
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
@@ -202,34 +152,36 @@ const MonthCalendar = () => {
             newCount++;
         }
 
-        // now fill end of array with 1-n days, will never need to check date bc it will always be max a week
-        console.log(updatedArrayOfDays);
-
+        //console.log(updatedArrayOfDays);
         setArrayOfDays(updatedArrayOfDays);
     }
 
     const handleNextWeek = () => {
-        if (weekStartIndex < 35) {
+        console.log(monthIndex, weekStartIndex, weekEndIndex);
+        if (weekStartIndex === 35) {
+            if (monthIndex !== 12) {
+                setMonthIndex(monthIndex + 1);
+                setWeekStartIndex(0);
+                setWeekEndIndex(7);
+            }
+        } else {
             setWeekStartIndex(weekStartIndex + 7);
             setWeekEndIndex(weekEndIndex + 7);
-        } else if (weekStartIndex === 35) {
-            setMonthIndex(monthIndex + 1);
-            setWeekStartIndex(0);
-            setWeekEndIndex(7);
         }
-        console.log(monthIndex, weekStartIndex, weekEndIndex);
     }
 
-    const handlePrevWeek = () => {
-        if (weekStartIndex > 0) {
+    const handlePrevWeek = () => { 
+        console.log(monthIndex, weekStartIndex, weekEndIndex);
+        if (weekStartIndex === 0) {
+            if (monthIndex !== 1) {
+                setMonthIndex(monthIndex - 1);
+                setWeekStartIndex(35);
+                setWeekEndIndex(42);
+            } 
+        } else {
             setWeekStartIndex(weekStartIndex - 7);
             setWeekEndIndex(weekEndIndex - 7);
-        } else if (weekStartIndex === 0) {
-            setMonthIndex(monthIndex - 1);
-            setWeekStartIndex(35);
-            setWeekEndIndex(42);
         }
-        //console.log(monthIndex, weekStartIndex, weekEndIndex);
     }
 
     const handleChangeYear = e => {
@@ -238,7 +190,7 @@ const MonthCalendar = () => {
 
     React.useEffect(() => {
         getDaysOfMonth();
-    }, [monthIndex, currYear]);
+    });
 
     return (
         <Grid container>
