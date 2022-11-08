@@ -69,6 +69,8 @@ const CalendarRow = (props) => {
 
     const handleClick = e => {
         console.log(props.days);
+        console.log(props.start, props.end);
+        props.getWeek(props.start, props.end);;
     }
 
     return (
@@ -105,14 +107,11 @@ const CalendarRow = (props) => {
     );
 }
 
-const MonthCalendar = () => {
+const MonthCalendar = (props) => {
 
     const today = new Date().getDate();
-    //console.log(today);
     const currMonth = new Date().getMonth()+1;
-    //console.log(currMonth);
     const thisYear = new Date().getFullYear();
-    //console.log(thisYear);
 
     // get current month by getting current month from date function
     const months = [
@@ -130,18 +129,9 @@ const MonthCalendar = () => {
         'December'
     ];
 
-    // Get current month and year
-    // lets say year = 2022, 
-    // month = new Date().getMonth() + 1 -> to make it 10 (maybe 9 bc start at 0)
-    // firstDay = new Date(year + "-" + month + "-01").getDay();
-    // 0 - Sunday
-    // 1 - Monday
-    // ...
-    // 6 - Saturday
-
-    const [monthIndex, setMonthIndex] = React.useState(currMonth); 
+    const [monthIndex, setMonthIndex] = React.useState(props.month); 
     const [arrayOfDays, setArrayOfDays] = React.useState(Array(42)); // fill array with empty undefined elements
-    const [currYear, setCurrYear] = React.useState(thisYear); 
+    const [currYear, setCurrYear] = React.useState(props.year); 
 
     const getDaysOfMonth = () => {
         let firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
@@ -201,21 +191,25 @@ const MonthCalendar = () => {
         console.log(updatedArrayOfDays);
 
         setArrayOfDays(updatedArrayOfDays);
+        props.setDayArray(updatedArrayOfDays);
     }
 
     const handleNextMonth = () => {
         if (monthIndex < 12) {
+            props.setMonth(monthIndex + 1);
             setMonthIndex(monthIndex + 1);
         }
     }
 
     const handlePrevMonth = () => {
         if (monthIndex > 1) {
+            props.setMonth(monthIndex - 1);
             setMonthIndex(monthIndex - 1);
         }
     }
 
     const handleChangeYear = e => {
+        props.setYear(e.target.value);
         setCurrYear(e.target.value);
     }
 
@@ -290,22 +284,22 @@ const MonthCalendar = () => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} />
+                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} />
+                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} />
+                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} />
+                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} />
+                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} />
+                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />

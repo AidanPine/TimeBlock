@@ -1,74 +1,111 @@
 import React from 'react';
-import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } from '@mui/material';
+import { Grid, Typography, IconButton, FormControl, Select, MenuItem } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import DOTWRow from './DOTWRow';
-//import getMonthArray from '../data_functions/getMonthArray';
 
 const DayItem = (props) => {
     let dateNum;
-    let color;
     let circleColor = "#ffffff";
     if (props.day) {
         dateNum = props.day.date;
-        color = props.day.isInMonth ? "#000000" : "#aaaaaa";
         if (props.day.isToday) {
-            color = "#ffffff";
             circleColor = "#8c52ff";
         }
     } else {
         return;
     }
 
-    const handleClick = e => {
-        console.log(dateNum); // return day that is clicked on, soon take to day view of this day
+    let divs = [];
+    for (let i = 0; i < 17; i++) {
+        divs.push(
+            <div style={{width: '100%', backgroundColor: '#ffffff', height: '39px', borderBottom: '1px solid #eeeeee'}}></div>
+        );
     }
 
     return (
-        <Paper style={{padding: '10px 90px 500px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
-            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
+        <div style={{backgroundColor: 'white', height: '600px'}}>
+
+            <div style={{height: '3px'}}></div>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, paddingTop: '2px', marginLeft: '3px'}}>
                 {dateNum}
             </div>
-        </Paper>
+
+            {divs}
+            
+        </div>
+    );
+}
+
+const HatchMarks = () => {
+    const times = [
+        "6am",
+        "7am",
+        "8am",
+        "9am",
+        "10am",
+        "11am",
+        "12pm",
+        "1pm",
+        "2pm",
+        "3pm",
+        "4pm",
+        "5pm",
+        "6pm",
+        "7pm",
+        "8pm",
+        "9pm",
+        "10pm",
+    ];
+
+    let hatches = [];
+    for (let i = 0; i < 16; i++) {
+        hatches.push(
+            [<div style={{marginLeft: '87.5%', width: '12.5%', backgroundColor: '#220f49', height: '9px', borderBottom: '1px solid #eeeeee'}}></div>,
+            <div style={{marginLeft: '75%', width: '25%', backgroundColor: '#220f49', height: '9px', borderBottom: '1px solid #eeeeee'}}></div>,
+            <div style={{marginLeft: '87.5%', width: '12.5%', backgroundColor: '#220f49', height: '9px', borderBottom: '1px solid #eeeeee'}}></div>,
+            <div style={{width: '50%', float: 'left', height: '9px', color: '#ffffff'}}>{times[i+1]}</div>,
+            <div style={{marginLeft: '50%', backgroundColor: '#220f49', height: '9px', borderBottom: '1px solid #eeeeee'}}></div>]
+        );               
+    }
+
+    return (
+        <div style={{backgroundColor: '#220f49', height: '600px', width: '100%'}}>
+            <div style={{height: '3px'}}></div>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: '#220f49', paddingTop: '2px'}}></div>
+            <div style={{width: '50%', height: '39px', float: 'left', color: '#ffffff', marginTop: '25px'}}>6am</div>
+            <div style={{marginLeft: '50%', backgroundColor: '#220f49', height: '39px', borderBottom: '1px solid #eeeeee'}}></div>
+            {hatches}
+        </div>
     );
 }
 
 const CalendarRow = (props) => {
-
-    // const handleClick = e => {
-    //     console.log(props.days);
-    // }
+    let dayIndex = 0;
+    for (let i = 0; i < 7; i++) {
+        if (props.days) {
+            console.log(props.days);
+            if (props.days[i].isToday) {
+                console.log("TODAY", props.days[i]);
+                dayIndex = i;
+            } 
+        }
+    }
 
     return (
-        
         <React.Fragment>
+            <Grid item xs={1} />
             <Grid item xs={1}>
-                <DayItem day={props.days[0]} />
+                <HatchMarks />
             </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[1]} />
+            <Grid item xs={4}>
+                <DayItem day={props.days[dayIndex]} />
             </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[2]} />
-            </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[3]} />
-            </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[4]} />
-            </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[5]} />
-            </Grid>
-            <Grid item xs={1}>
-                <DayItem day={props.days[6]} />
-            </Grid>
-            
+            <Grid item xs={2} />
         </React.Fragment>
     );
 }
 
-const WeekCalendar = (props) => {
+const DayCalendar = (props) => {
 
     const today = new Date().getDate();
     const currMonth = new Date().getMonth()+1;
@@ -90,6 +127,7 @@ const WeekCalendar = (props) => {
     ];
 
 
+    //const [day, setDay] = React.useState(props.day);
     const [monthIndex, setMonthIndex] = React.useState(props.month); 
     const [arrayOfDays, setArrayOfDays] = React.useState(props.dayArray); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(props.year); 
@@ -188,7 +226,7 @@ const WeekCalendar = (props) => {
 
     React.useEffect(() => {
         getDaysOfMonth();
-    });
+    }, []);
 
     return (
         <Grid container>
@@ -236,9 +274,6 @@ const WeekCalendar = (props) => {
             <Grid item xs={12} style={{height: '30px'}} />
             <Grid container item xs={12}>
                 <Grid item xs={12} container spacing={1}>
-                    <DOTWRow />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
                 <Grid item container spacing={0} xs={12} justifyContent="center">
                     <Grid item xs={1}>
                         <IconButton style={{marginTop: '16px'}} size="large" onClick={handlePrevWeek}>
@@ -260,4 +295,4 @@ const WeekCalendar = (props) => {
     );
 }
 
-export default WeekCalendar;
+export default DayCalendar;
