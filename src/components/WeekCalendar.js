@@ -2,42 +2,10 @@ import React from 'react';
 import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import { connect } from 'react-redux';
-
-const DOTWRow = () => {
-    return (
-        <Grid item container spacing={0} xs={12} justifyContent="center">
-            <Grid item xs={1} />
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>S</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>M</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>T</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>W</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>T</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>F</p>
-            </Grid>
-            <Grid item xs={1}>
-                <p style={{color: '#8c52ff'}}>S</p>
-            </Grid>
-            <Grid item xs={1} />
-        </Grid>
-    );
-}
 import DOTWRow from './DOTWRow';
+import getMonthArray from '../data_functions/getMonthArray';
 
-
-const CalendarItem = (props) => {
+const DayItem = (props) => {
     let dateNum;
     let color;
     let circleColor = "#ffffff";
@@ -57,7 +25,7 @@ const CalendarItem = (props) => {
     }
 
     return (
-        <Paper style={{padding: '10px 90px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
+        <Paper style={{padding: '10px 90px 500px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
                 {dateNum}
             </div>
@@ -67,53 +35,44 @@ const CalendarItem = (props) => {
 
 const CalendarRow = (props) => {
 
-    const handleClick = e => {
-        console.log(props.days);
-    }
+    // const handleClick = e => {
+    //     console.log(props.days);
+    // }
 
     return (
-        <Grid item container spacing={0} xs={12} justifyContent="center">
+        
+        <React.Fragment>
             <Grid item xs={1}>
-                <IconButton style={{marginTop: '16px'}} size="large" onClick={handleClick}>
-                    <ArrowCircleRightIcon style={{color: '#ffffff'}} fontSize="inherit" />
-                </IconButton>
+                <DayItem day={props.days[0]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[0]} />
+                <DayItem day={props.days[1]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[1]} />
+                <DayItem day={props.days[2]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[2]} />
+                <DayItem day={props.days[3]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[3]} />
+                <DayItem day={props.days[4]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[4]} />
+                <DayItem day={props.days[5]} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[5]} />
+                <DayItem day={props.days[6]} />
             </Grid>
-            <Grid item xs={1}>
-                <CalendarItem day={props.days[6]} />
-            </Grid>
-            <Grid item xs={1} />
             
-        </Grid>
+        </React.Fragment>
     );
 }
 
 const MonthCalendar = () => {
 
     const today = new Date().getDate();
-    //console.log(today);
     const currMonth = new Date().getMonth()+1;
-    //console.log(currMonth);
     const thisYear = new Date().getFullYear();
-    //console.log(thisYear);
-
     // get current month by getting current month from date function
     const months = [
         'January',
@@ -130,18 +89,14 @@ const MonthCalendar = () => {
         'December'
     ];
 
-    // Get current month and year
-    // lets say year = 2022, 
-    // month = new Date().getMonth() + 1 -> to make it 10 (maybe 9 bc start at 0)
-    // firstDay = new Date(year + "-" + month + "-01").getDay();
-    // 0 - Sunday
-    // 1 - Monday
-    // ...
-    // 6 - Saturday
+    const { monthArray, startWeekIndex, endWeekIndex } = getMonthArray(today, currMonth, thisYear);
+
 
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
-    const [arrayOfDays, setArrayOfDays] = React.useState(Array(42)); // fill array with empty undefined elements
+    const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(thisYear); 
+    const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
+    const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
 
     const getDaysOfMonth = () => {
         let firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
@@ -197,21 +152,35 @@ const MonthCalendar = () => {
             newCount++;
         }
 
-        // now fill end of array with 1-n days, will never need to check date bc it will always be max a week
-        console.log(updatedArrayOfDays);
-
+        //console.log(updatedArrayOfDays);
         setArrayOfDays(updatedArrayOfDays);
     }
 
-    const handleNextMonth = () => {
-        if (monthIndex < 12) {
-            setMonthIndex(monthIndex + 1);
+    const handleNextWeek = () => {
+        console.log(monthIndex, weekStartIndex, weekEndIndex);
+        if (weekStartIndex === 35) {
+            if (monthIndex !== 12) {
+                setMonthIndex(monthIndex + 1);
+                setWeekStartIndex(0);
+                setWeekEndIndex(7);
+            }
+        } else {
+            setWeekStartIndex(weekStartIndex + 7);
+            setWeekEndIndex(weekEndIndex + 7);
         }
     }
 
-    const handlePrevMonth = () => {
-        if (monthIndex > 1) {
-            setMonthIndex(monthIndex - 1);
+    const handlePrevWeek = () => { 
+        console.log(monthIndex, weekStartIndex, weekEndIndex);
+        if (weekStartIndex === 0) {
+            if (monthIndex !== 1) {
+                setMonthIndex(monthIndex - 1);
+                setWeekStartIndex(35);
+                setWeekEndIndex(42);
+            } 
+        } else {
+            setWeekStartIndex(weekStartIndex - 7);
+            setWeekEndIndex(weekEndIndex - 7);
         }
     }
 
@@ -221,32 +190,14 @@ const MonthCalendar = () => {
 
     React.useEffect(() => {
         getDaysOfMonth();
-    }, [monthIndex, currYear]);
+    });
 
     return (
         <Grid container>
             <Grid item container xs={12}>
                 <Grid item xs={4} />
-                <Grid item container xs={4} style={{marginTop: '10px'}}>
-                    <Grid item xs={4}>
-                        <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#8C52FF", height: "35px", width: "35px", backgroundColor: "#220f49"}} onClick={handlePrevMonth} >
-                            {
-                                // Go to prev month
-                            }
-                            <ArrowBackIosNewIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography variant="h5" style={{color: '#ffffff'}}>{months[monthIndex-1]}</Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#8C52FF", height: "35px", width: "35px", backgroundColor: "#220f49"}} onClick={handleNextMonth} >
-                            {
-                                // Go to next month
-                            }
-                            <ArrowForwardIosIcon />
-                        </IconButton>
-                    </Grid>
+                <Grid item xs={4}>
+                    <Typography variant="h5" style={{color: '#ffffff'}}>{months[monthIndex-1]}</Typography>
                 </Grid>
                 <Grid item xs={4} align="right">
                     <FormControl>
@@ -290,22 +241,19 @@ const MonthCalendar = () => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} />
+                <Grid item container spacing={0} xs={12} justifyContent="center">
+                    <Grid item xs={1}>
+                        <IconButton style={{marginTop: '16px'}} size="large" onClick={handlePrevWeek}>
+                            <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
+                        </IconButton>
+                    </Grid>
+                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} />
+                    <Grid item xs={1}>
+                        <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextWeek}>
+                            <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />
+                        </IconButton>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} />
-                </Grid>
-                <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />
@@ -314,12 +262,4 @@ const MonthCalendar = () => {
     );
 }
 
-const mapStateToProps = (state) => {
-    console.log(state);
-    return {
-
-    }
-}
-
-
-export default connect(mapStateToProps)(MonthCalendar);
+export default MonthCalendar;

@@ -8,6 +8,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
+import WeekCalendar from './WeekCalendar';
 
 const Dashboard = (props) => {
     const user = {
@@ -69,9 +70,7 @@ const Dashboard = (props) => {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Week
-                    </Typography>
+                    <WeekCalendar />
                 </TabPanel>
 
                 {
