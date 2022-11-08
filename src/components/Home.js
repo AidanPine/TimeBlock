@@ -5,15 +5,16 @@ import logo from '../assets/TimeBlock.png';
 import { Link } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-// import { useDispatch } from "react-redux"; commented so no warnings - implement soon
-// import { ActionCreators } from "./actions"; commented so no warnings - implement soon
+import { ActionCreators } from "../redux_functions/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { myFirebase } from "../firebase_functions/firebase";
 
 
 const Home = () => {
     const [openLogin, setOpenLogin] = React.useState(false);
     const [openSignup, setOpenSignup] = React.useState(false);
-
-    // const dispatch = useDispatch(); commented so no warnings - implement soon
+    const authEmpty = useSelector(state => state.firebase.auth.isEmpty);
+    const dispatch = useDispatch();
 
     const handleOpenLogin = () => {
         setOpenLogin(true);
@@ -31,6 +32,13 @@ const Home = () => {
         setOpenSignup(false);
     }
 
+    const handleSignOut = () => {
+        myFirebase.auth().signOut().then(() => {
+                dispatch(ActionCreators.logout());
+            }
+        );
+    }
+
     return (
         <div className="App">
             <Grid container spacing={3}>
@@ -45,32 +53,37 @@ const Home = () => {
                     <Button
                         variant="contained"
                         style={{color: "#8C52FF", backgroundColor: "#ffffff", fontWeight: "bold", textTransform: "none", marginLeft: "10px", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "right"}}
-                        onClick={handleOpenLogin}
+                        onClick={authEmpty ? handleOpenLogin : handleSignOut}
                         sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
-                        Log In
+                        { authEmpty ? 'Sign In': 'Sign Out'}
                     </Button>
                     <Dialog open={openLogin} onClose={handleCloseLogin}>
                         <DialogTitle style={{ fontWeight: 'bold', color: '#8C52FF'}} align="center">
                             Log In
                         </DialogTitle>
-                        <Login></Login>
+                        <Login/>
                     </Dialog>
                 </Grid>
 
                 <Grid item xs={6} sm={3} md={2} lg={2}>
-                    <Button 
-                        variant="outlined" 
-                        style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
-                        onClick={handleOpenSignup}
-                        sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
-                        Sign Up
-                    </Button>
+                    {
+                        authEmpty ?
+                            <Button
+                                variant="outlined"
+                                style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
+                                onClick={handleOpenSignup}
+                                sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
+                                Sign Up
+                            </Button>
+                            : null
+                    }
                     <Dialog open={openSignup} onClose={handleCloseSignup}>
                         <DialogTitle style={{ fontWeight: 'bold', color: '#8C52FF'}} align="center">
                             Sign Up
                         </DialogTitle>
-                        <Signup></Signup>
+                        <Signup/>
                     </Dialog>
+
                 </Grid>
 
                 <Grid item xs={12} stlye={{height: "10px"}} />

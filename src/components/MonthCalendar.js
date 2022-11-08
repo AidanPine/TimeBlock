@@ -3,7 +3,39 @@ import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } fr
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { connect } from 'react-redux';
+
+const DOTWRow = () => {
+    return (
+        <Grid item container spacing={0} xs={12} justifyContent="center">
+            <Grid item xs={1} />
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>S</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>M</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>T</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>W</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>T</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>F</p>
+            </Grid>
+            <Grid item xs={1}>
+                <p style={{color: '#8c52ff'}}>S</p>
+            </Grid>
+            <Grid item xs={1} />
+        </Grid>
+    );
+}
 import DOTWRow from './DOTWRow';
+
 
 const CalendarItem = (props) => {
     let dateNum;
@@ -282,4 +314,12 @@ const MonthCalendar = () => {
     );
 }
 
-export default MonthCalendar;
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+
+    }
+}
+
+
+export default connect(mapStateToProps)(MonthCalendar);

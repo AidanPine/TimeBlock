@@ -2,16 +2,27 @@ import React from 'react';
 import { Grid, IconButton, Typography, Box, Tabs, Tab } from '@mui/material';
 import logo from '../assets/tb-icon.png';
 import HomeIcon from '@mui/icons-material/Home';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
+import { compose } from 'redux';
+import { firestoreConnect } from "react-redux-firebase";
 import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
 
-const Dashboard = () => {
-    const user = useSelector((state) => state.profile.profile);
+const Dashboard = (props) => {
+    const user = {
+        email: useSelector((state) => state.firebase.auth.email)
+    }
+    const profile = {
+        ...user,
+        ...useSelector((state) => state.firebase.profile)
+    }
     const navigate = useNavigate();
-    const handleClick = () => {navigate("/")};
+
+    const handleClick = () => {
+        navigate("/");
+    };
 
     const [tabValue, setTabValue] = React.useState(0);
 
@@ -76,19 +87,16 @@ const Dashboard = () => {
                 }
                 <TabPanel value={tabValue} index={3}>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        First Name: {user.firstName}
+                        First Name: {profile.firstName}
                     </Typography>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Last Name: {user.lastName}
+                        Last Name: {profile.lastName}
                     </Typography>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Username: {user.username}
+                        Username: {profile.username}
                     </Typography>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Email: {user.email}
-                    </Typography>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Password: {user.password}
+                        Email: {profile.email}
                     </Typography>
                 </TabPanel>
 
@@ -98,4 +106,15 @@ const Dashboard = () => {
     );
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+    return {
+        blocks: state.firestore.ordered.blocks
+    }
+}
+
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect([
+        { collection : 'blocks'}
+    ])
+)(Dashboard);
