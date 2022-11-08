@@ -1,61 +1,80 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Button, TextField, Grid} from '@mui/material';
-import { useDispatch } from "react-redux";
-import { ActionCreators } from "../redux_functions/actions";
-import { useNavigate } from 'react-router-dom';
+import { connect } from "react-redux";
+import { signIn } from "../redux_functions/actions";
+import { withRouter } from "./withRouter";
+import { myFirebase } from "../firebase_functions/firebase";
 
 
+class Login extends Component {
+    state = {email: "", password: ""};
 
-const Login = () => {
-    let state = {username: "", password: ""};
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    // function handleChange(event) {
-    //     state.username = event.state.username;
-    //     state.password = event.state.password;
-    // }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-        dispatch(ActionCreators.login({username: state.username, password: state.password}));
-        navigate("/Dashboard");
+    handleChange = (event) => {
+         this.setState({
+             [event.target.id]: event.target.value
+         })
     }
-    return (
-        <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-                <Grid item xs={1} />
-                <Grid item xs={10}>
-                    <TextField name='username' label={'Username'} variant={'outlined'}
-                        onChange={(e) =>{
-                            state.username = e.target.value;
-                        }}
-                        fullWidth
-                        required
-                    />
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        this.props.signIn(this.state);
+        myFirebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.props.navigate('/dashboard');
+            }
+        })
+    }
+
+    render() {
+        const { authError } = this.props;
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <Grid container spacing={3}>
+                    <Grid item xs={1}/>
+                    <Grid item xs={10}>
+                        <TextField id='email' label={'Email'} variant={'outlined'}
+                                   onChange={this.handleChange}
+                                   fullWidth
+                                   required
+                        />
+                    </Grid>
+                    <Grid item xs={1}/>
+                    <Grid item xs={1}/>
+                    <Grid item xs={10}>
+                        <TextField id='password' label={'Password'} variant={'outlined'}
+                                   onChange={this.handleChange}
+                                   fullWidth
+                                   required
+                        />
+                    </Grid>
+                    <Grid item xs={1}/>
+                    <Grid item xs={4}/>
+                    <Grid item xs={4}>
+                        <Button variant={'contained'} type={'submit'} fullWidth
+                                style={{backgroundColor: '#8C52FF', borderRadius: '20px'}}>Log In</Button>
+                    </Grid>
+                    <Grid item xs={4}/>
+                    <Grid item xs={12}/>
+                    <div className="red-text center">
+                        { authError ? <p>{ authError }</p> : null}
+                    </div>
                 </Grid>
-                <Grid item xs={1} />
-                <Grid item xs={1} />
-                <Grid item xs={10}>
-                    <TextField name='password' label={'Password'} variant={'outlined'}
-                        onChange={(e) =>{
-                            state.password = e.target.value;
-                        }}
-                        fullWidth
-                        required
-                    />
-                </Grid>
-                <Grid item xs={1} />
-                <Grid item xs={4} />
-                <Grid item xs={4}>
-                    <Button variant={'contained'} type={'submit'} fullWidth style={{backgroundColor: '#8C52FF', borderRadius: '20px'}}>Log In</Button>
-                </Grid>
-                <Grid item xs={4} />
-                <Grid item xs={12} />
-            </Grid>            
-        </form>
-    )
+            </form>
+        )
+    }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        authError: state.auth.authError,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signIn: (credentials) => dispatch(signIn(credentials))
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
