@@ -38,11 +38,11 @@ const Dashboard = (props) => {
     // ];
     const { monthArray, startWeekIndex, endWeekIndex } = getMonthArray(today, currMonth, thisYear);
 
-    const profile = {
+    const user = {
         email: useSelector((state) => state.firebase.auth.email)
     }
-    const user = {
-        ...profile,
+    const profile = {
+        ...user,
         ...useSelector((state) => state.firebase.profile)
     }
 
