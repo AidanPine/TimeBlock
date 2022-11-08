@@ -7,16 +7,70 @@ import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
+import DayCalendar from './DayCalendar';
+import getMonthArray from '../data_functions/getMonthArray';
 
 const Dashboard = () => {
+
+    const today = new Date().getDate();
+    //console.log(today);
+    const currMonth = new Date().getMonth()+1;
+    //console.log(currMonth);
+    const thisYear = new Date().getFullYear();
+    //console.log(thisYear);
+
+    // get current month by getting current month from date function
+    // const months = [
+    //     'January',
+    //     'February',
+    //     'March',
+    //     'April',
+    //     'May',
+    //     'June',
+    //     'July',
+    //     'August',
+    //     'September',
+    //     'October',
+    //     'November',
+    //     'December'
+    // ];
+    const { monthArray, startWeekIndex, endWeekIndex } = getMonthArray(today, currMonth, thisYear);
+
+
     const user = useSelector((state) => state.profile.profile);
     const navigate = useNavigate();
     const handleClick = () => {navigate("/")};
 
     const [tabValue, setTabValue] = React.useState(0);
 
+    const [currDay, setCurrDay] = React.useState(today);
+    const [monthIndex, setMonthIndex] = React.useState(currMonth); 
+    const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
+    const [currYear, setCurrYear] = React.useState(thisYear);
+    const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
+    const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
+
     const handleTabChange = (e, newTabValue) => {
         setTabValue(newTabValue);
+    }
+
+    const handleClickWeek = (start, end) => {
+        console.log("From Dash: " + start + ", " + end);
+        setWeekStartIndex(start);
+        setWeekEndIndex(end);
+        setTabValue(1); // to week view
+    }
+
+    const setDayArray = (newArray) => {
+        setArrayOfDays(newArray);
+    }
+
+    const setMonth = (newMonth) => {
+        setMonthIndex(newMonth);
+    }
+
+    const setYear = (newYear) => {
+        setCurrYear(newYear);
     }
 
     return (
@@ -52,23 +106,21 @@ const Dashboard = () => {
                     // TAB PANEL FOR MONTH
                 }
                 <TabPanel value={tabValue} index={0}>
-                    <MonthCalendar />
+                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <WeekCalendar />
+                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR DAY
                 }
                 <TabPanel value={tabValue} index={2}>
-                    <Typography variant={'h5'} style={{color: '#ffffff'}}>
-                        Day
-                    </Typography>
+                    <DayCalendar day={currDay} month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} />
                 </TabPanel>
 
                 {
