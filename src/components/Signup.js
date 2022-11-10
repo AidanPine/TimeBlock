@@ -76,6 +76,7 @@ const Signup = (props) => {
                         }}
                         fullWidth
                         required
+                        type="password"
                     />
                 </Grid>
                 <Grid item xs={1} />

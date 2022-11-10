@@ -46,6 +46,7 @@ class Login extends Component {
                                    onChange={this.handleChange}
                                    fullWidth
                                    required
+                                   type="password"
                         />
                     </Grid>
                     <Grid item xs={1}/>
