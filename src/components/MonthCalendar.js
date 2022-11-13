@@ -5,6 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { connect } from 'react-redux';
 import DOTWRow from './DOTWRow';
+import getMonthArray from '../data_functions/getMonthArray';
 
 
 const CalendarItem = (props) => {
@@ -23,7 +24,10 @@ const CalendarItem = (props) => {
     }
 
     const handleClick = e => {
-        console.log(dateNum); // return day that is clicked on, soon take to day view of this day
+        console.log(props.day.index); // return day that is clicked on, soon take to day view of this day
+        if (props.day.isInMonth) {
+            props.handleDayClick(props.day.index);
+        }
     }
 
     return (
@@ -51,25 +55,25 @@ const CalendarRow = (props) => {
                 </IconButton>
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[0]} />
+                <CalendarItem day={props.days[0]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[1]} />
+                <CalendarItem day={props.days[1]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[2]} />
+                <CalendarItem day={props.days[2]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[3]} />
+                <CalendarItem day={props.days[3]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[4]} />
+                <CalendarItem day={props.days[4]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[5]} />
+                <CalendarItem day={props.days[5]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[6]} />
+                <CalendarItem day={props.days[6]} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1} />
             
@@ -122,7 +126,8 @@ const MonthCalendar = (props) => {
                 date: lastDayOfLastMonth,
                 isInMonth: false,
                 isToday: false,
-                events: []
+                events: [],
+                index: i
             }
             lastDayOfLastMonth--;
         }
@@ -140,7 +145,8 @@ const MonthCalendar = (props) => {
                     date: count,
                     isInMonth: true,
                     isToday: isTodaysDate,
-                    events: []
+                    events: [],
+                    index: i
                 }
                 count++;
             }
@@ -152,7 +158,8 @@ const MonthCalendar = (props) => {
                 date: newCount,
                 isInMonth: false,
                 isToday: false,
-                events: []
+                events: [],
+                index: i
             }
             newCount++;
         }
@@ -185,7 +192,7 @@ const MonthCalendar = (props) => {
 
     React.useEffect(() => {
         getDaysOfMonth();
-    }, [monthIndex, currYear]);
+    });
 
     return (
         <Grid container>
@@ -254,22 +261,22 @@ const MonthCalendar = (props) => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} />
+                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />

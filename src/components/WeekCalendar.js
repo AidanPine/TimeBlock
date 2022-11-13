@@ -21,7 +21,8 @@ const DayItem = (props) => {
     }
 
     const handleClick = e => {
-        console.log(dateNum); // return day that is clicked on, soon take to day view of this day
+        console.log(props.start + props.offset); // return day that is clicked on, soon take to day view of this day
+        props.handleDayClick(props.start + props.offset);
     }
 
     return (
@@ -35,33 +36,29 @@ const DayItem = (props) => {
 
 const CalendarRow = (props) => {
 
-    // const handleClick = e => {
-    //     console.log(props.days);
-    // }
-
     return (
         
         <React.Fragment>
             <Grid item xs={1}>
-                <DayItem day={props.days[0]} />
+                <DayItem day={props.days[0]} offset={0} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[1]} />
+                <DayItem day={props.days[1]} offset={1} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[2]} />
+                <DayItem day={props.days[2]} offset={2} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[3]} />
+                <DayItem day={props.days[3]} offset={3} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[4]} />
+                <DayItem day={props.days[4]} offset={4} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[5]} />
+                <DayItem day={props.days[5]} offset={5} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[6]} />
+                <DayItem day={props.days[6]} offset={6} start={props.startIndex} handleDayClick={props.getDay} />
             </Grid>
             
         </React.Fragment>
@@ -245,7 +242,7 @@ const WeekCalendar = (props) => {
                             <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
                         </IconButton>
                     </Grid>
-                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} />
+                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} startIndex={weekStartIndex} endIndex={weekEndIndex} getDay={props.handleClickDay} />
                     <Grid item xs={1}>
                         <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextWeek}>
                             <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />

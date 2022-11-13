@@ -6,10 +6,12 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const DayItem = (props) => {
     let dateNum;
     let circleColor = "#ffffff";
+    let textColor= "#000000";
     if (props.day) {
         dateNum = props.day.date;
         if (props.day.isToday) {
             circleColor = "#8c52ff";
+            textColor = "#ffffff";
         }
     } else {
         return;
@@ -26,7 +28,7 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'white', height: '600px'}}>
 
             <div style={{height: '3px'}}></div>
-            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, paddingTop: '2px', marginLeft: '3px'}}>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, paddingTop: '2px', marginLeft: '3px', color: textColor}}>
                 {dateNum}
             </div>
 
@@ -80,18 +82,6 @@ const HatchMarks = () => {
 }
 
 const CalendarRow = (props) => {
-    // let dayIndex = 0;
-    // for (let i = 0; i < 7; i++) {
-    //     if (props.days) {
-    //         console.log(props.days);
-    //         if (props.days[i].isToday) {
-    //             console.log("TODAY", props.days[i]);
-    //             dayIndex = i;
-    //         } 
-    //     }
-    // }
-    // props.setDayIndex(dayIndex);
-
     return (
         <React.Fragment>
             <Grid item xs={1} />
@@ -127,16 +117,8 @@ const DayCalendar = (props) => {
         'December'
     ];
 
-    let dayIndex = 0;
-    for (let i = 0; i < 42; i++) {
-        if (props.dayArray[i].isToday) {
-            dayIndex = i;
-            break;
-        }
-    }
 
-
-    const [day, setDay] = React.useState(dayIndex);
+    const [day, setDay] = React.useState(props.dayIndex);
     const [monthIndex, setMonthIndex] = React.useState(props.month); 
     const [arrayOfDays, setArrayOfDays] = React.useState(props.dayArray);
     const [currYear, setCurrYear] = React.useState(props.year); 

@@ -52,6 +52,14 @@ const Dashboard = (props) => {
         navigate("/");
     };
 
+    let dayInd = 0;
+    for (let i = 0; i < 42; i++) {
+        if (monthArray[i].isToday) {
+            dayInd = i;
+            break;
+        }
+    }
+
     const [tabValue, setTabValue] = React.useState(0);
 
     const [currDay, setCurrDay] = React.useState(today);
@@ -60,6 +68,7 @@ const Dashboard = (props) => {
     const [currYear, setCurrYear] = React.useState(thisYear);
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
+    const [dayIndex, setDayIndex] = React.useState(dayInd+1);
 
     const handleTabChange = (e, newTabValue) => {
         setTabValue(newTabValue);
@@ -70,6 +79,11 @@ const Dashboard = (props) => {
         setWeekStartIndex(start);
         setWeekEndIndex(end);
         setTabValue(1); // to week view
+    }
+
+    const handleClickDay = (index) => {
+        setDayIndex(index);
+        setTabValue(2);
     }
 
     const setDayArray = (newArray) => {
@@ -117,21 +131,21 @@ const Dashboard = (props) => {
                     // TAB PANEL FOR MONTH
                 }
                 <TabPanel value={tabValue} index={0}>
-                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} />
+                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} handleClickDay={handleClickDay} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} />
+                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} handleClickDay={handleClickDay} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR DAY
                 }
                 <TabPanel value={tabValue} index={2}>
-                    <DayCalendar day={currDay} month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} />
+                    <DayCalendar day={currDay} month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} dayIndex={dayIndex} />
                 </TabPanel>
 
                 {
