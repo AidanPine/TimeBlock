@@ -27,6 +27,7 @@ export const signIn = (credentials) => {
             credentials.email,
             credentials.password
         ).then((user) => {
+            console.log(this.state);
             firestore.collection('users').doc(user.uid).then((doc, user) => {
                     dispatch(ActionCreators.receiveLogin());
                 }
@@ -47,6 +48,14 @@ export const signOut = () => {
     }
 }
 
+const initBlock = {
+    name: 'default',
+    length: 1,
+    color: 0x00,
+    date: 'now',
+    startTime: 'now',
+}
+
 export const signUp = (newUser) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         const firebase = getFirebase();
@@ -56,11 +65,14 @@ export const signUp = (newUser) => {
             newUser.email,
             newUser.password
         ).then((response) => {
-            return firestore.collection('users').doc(response.user.uid).set({
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                username: newUser.username
-            })
+            return (
+                firestore.collection('users').doc(response.user.uid).set({
+                    firstName: newUser.firstName,
+                    lastName: newUser.lastName,
+                    username: newUser.username
+                }).then(firestore.collection('users').doc(response.user.uid).collection('blocks').add({
+                        ...initBlock,
+                    })))
         }).then(() => {
             dispatch(ActionCreators.signup());
         }).catch(error => {

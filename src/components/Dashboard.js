@@ -20,7 +20,6 @@ const Dashboard = (props) => {
     //console.log(currMonth);
     const thisYear = new Date().getFullYear();
     //console.log(thisYear);
-
     // get current month by getting current month from date function
     // const months = [
     //     'January',
@@ -173,14 +172,26 @@ const Dashboard = (props) => {
 }
 
 const mapStateToProps = (state) => {
+    state.blocks.blocks = state.firestore.ordered.blocks;
+    console.log(state);
     return {
-        blocks: state.firestore.ordered.blocks
+        blocks: state.firestore.ordered.blocks,
+        auth: state.firebase.auth
     }
 }
 
 export default compose(
-    connect(mapStateToProps),
-    firestoreConnect([
-        { collection : 'blocks'}
-    ])
+    firestoreConnect(props => {
+        return [
+            {
+                collection: 'users',
+                doc: props.auth.isEmpty ? 'kSwQeeRaTzkMfdgsNR0v' : props.auth.uid,
+                subcollections: [
+                    {collection: 'blocks'}
+                ],
+                storeAs: 'blocks'
+            }
+        ];
+    }),
+    connect(mapStateToProps)
 )(Dashboard);

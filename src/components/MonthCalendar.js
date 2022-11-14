@@ -165,7 +165,7 @@ const MonthCalendar = (props) => {
         }
 
         // now fill end of array with 1-n days, will never need to check date bc it will always be max a week
-        console.log(updatedArrayOfDays);
+        //console.log(updatedArrayOfDays);
 
         setArrayOfDays(updatedArrayOfDays);
         props.setDayArray(updatedArrayOfDays);
@@ -286,7 +286,6 @@ const MonthCalendar = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
 
     }
