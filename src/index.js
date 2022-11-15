@@ -11,7 +11,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider, useSelector} from 'react-redux';
 
-
 const rrfConfig = {
   userProfile: "users",
   useFirestoreForProfile: true

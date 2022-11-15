@@ -4,7 +4,7 @@ import logo from '../assets/tb-icon.png';
 import HomeIcon from '@mui/icons-material/Home';
 import { useSelector, connect } from 'react-redux';
 import { compose } from 'redux';
-import { firestoreConnect } from "react-redux-firebase";
+import {firestoreConnect, getFirebase} from "react-redux-firebase";
 import { useNavigate } from 'react-router-dom';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
@@ -185,7 +185,7 @@ export default compose(
         return [
             {
                 collection: 'users',
-                doc: props.auth.isEmpty ? 'kSwQeeRaTzkMfdgsNR0v' : props.auth.uid,
+                doc: getFirebase().auth().currentUser ? getFirebase().auth().currentUser.uid : 'kSwQeeRaTzkMfdgsNR0v',
                 subcollections: [
                     {collection: 'blocks'}
                 ],
