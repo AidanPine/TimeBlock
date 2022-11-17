@@ -1,5 +1,30 @@
 import { Types } from './actionTypes';
 
+const randomKey = (keyLength) => {
+    const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+    const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let key = "";
+
+    while (key.length < keyLength) {
+        let choice = Math.floor(Math.random() * 3);
+        switch(choice) {
+            case 0:
+                key += lower[Math.floor(Math.random() * 26)];
+                break;
+            case 1:
+                key += upper[Math.floor(Math.random() * 26)];
+                break;
+            case 2:
+                key += nums[Math.floor(Math.random() * 10)];
+                break;
+            default:
+                break;
+        }
+    }
+
+    return key;
+}
 
 export const ActionCreators = {
     addUser: (user) => ({ type: Types.ADD_USER, payload: { user } }),
@@ -78,5 +103,27 @@ export const signUp = (newUser) => {
         }).catch(error => {
             dispatch(ActionCreators.signupError(error));
         })
+    }
+}
+
+export const addBlock = (newBlock) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+
+        const user =  firebase.auth().currentUser.uid;
+        let blockID = randomKey(8);
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('blocks').add({
+                ...newBlock,
+            }).then((response, blockID) => {
+                blockID = response.id;
+            })
+        }
+        dispatch(ActionCreators.addEvent({
+                ...newBlock,
+                id: blockID
+            })
+        );
     }
 }
