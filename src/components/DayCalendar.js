@@ -1,7 +1,34 @@
 import React from 'react';
-import { Grid, Typography, IconButton, FormControl, Select, MenuItem } from '@mui/material';
+import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, DialogContentText } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SquareIcon from '@mui/icons-material/Square';
+
+const randomKey = (length) => {
+    const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+    const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let key = "";
+
+    while (key.length < length) {
+        let choice = Math.floor(Math.random() * 3);
+        switch(choice) {
+            case 0:
+                key += lower[Math.floor(Math.random() * 26)];
+                break;
+            case 1:
+                key += upper[Math.floor(Math.random() * 26)];
+                break;
+            case 2:
+                key += nums[Math.floor(Math.random() * 10)];
+                break;
+            default:
+                break;
+        }
+    }
+
+    return key;
+}
 
 const DayItem = (props) => {
     let dateNum;
@@ -82,6 +109,159 @@ const HatchMarks = () => {
 }
 
 const CalendarRow = (props) => {
+    const hoursInputs = [
+        {
+            "value": 0,
+            "label": 0
+        },
+        {
+            "value": 1,
+            "label": 1
+        },
+        {
+            "value": 2,
+            "label": 2
+        },
+        {
+            "value": 3,
+            "label": 3
+        },
+        {
+            "value": 4,
+            "label": 4
+        },
+        {
+            "value": 5,
+            "label": 5
+        },
+        {
+            "value": 6,
+            "label": 6
+        },
+        {
+            "value": 7,
+            "label": 7
+        },
+        {
+            "value": 8,
+            "label": 8
+        },
+        {
+            "value": 9,
+            "label": 9
+        },
+        {
+            "value": 10,
+            "label": 10
+        },
+        {
+            "value": 11,
+            "label": 11
+        },
+        {
+            "value": 12,
+            "label": 12
+        }
+    ]
+
+    const minutesInputs = [
+        {
+            "value": 0,
+            "label": 0
+        },
+        {
+            "value": 15,
+            "label": 15
+        },
+        {
+            "value": 30,
+            "label": 30
+        },
+        {
+            "value": 45,
+            "label": 45
+        }
+    ]
+
+    const palette = [
+        {
+            "color": "#da5151"
+        },
+        {
+            "color": "#ff7700"
+        },
+        {
+            "color": "#f5b216"
+        },
+        {
+            "color": "#1edb8b"
+        },
+        {
+            "color": "#16b6f5"
+        },
+        {
+            "color": "#006fff"
+        },
+        {
+            "color": "#7b00ff"
+        },
+        {
+            "color": "#F200FF"
+        },
+    ]
+
+    const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+    const [blockName, setBlockName] = React.useState("");
+    const [blockHours, setBlockHours] = React.useState(0);
+    const [blockMinutes, setBlockMinutes] = React.useState(0);
+    const [blockColor, setBlockColor] = React.useState("#da5151");
+
+    const [blocks, setBlocks] = React.useState([]);
+
+    const handleDialogOpen = () => {
+        setAddDialogOpen(true);
+    }
+
+    const handleDialogClose = () => {
+        setAddDialogOpen(false);
+    }
+
+    const addNewBlock = () => {
+        if (!(blockName === "" || (blockHours === 0 && blockMinutes === 0))) {
+
+            const duration = blockHours + (blockMinutes/60);
+            const newKey = randomKey(8);
+            
+            const newBlock = {
+                name: blockName,
+                hours: blockHours,
+                minutes: blockMinutes,
+                duration: duration,
+                color: blockColor, 
+                completed: false,
+                yPos: 0,
+                key: newKey
+            }
+            setAddDialogOpen(false);
+            setBlockName("");
+            setBlockHours(0);
+            setBlockMinutes(0);
+            setBlockColor("#da5151");
+
+            console.log(newBlock);
+            setBlocks(blocks.concat(newBlock));
+        }
+    }
+
+    const cancelAddNewBlock = () => {
+        // reset values, close dialog
+        setAddDialogOpen(false);
+        setBlockName("");
+        setBlockHours(0);
+        setBlockMinutes(0);
+        setBlockColor("#da5151");
+    }
+
     return (
         <React.Fragment>
             <Grid item xs={1} />
@@ -91,7 +271,100 @@ const CalendarRow = (props) => {
             <Grid item xs={4}>
                 <DayItem day={props.days[props.dayIndex]} />
             </Grid>
-            <Grid item xs={2} />
+            <Grid item xs={2}>
+                <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
+                <Dialog open={addDialogOpen} onClose={handleDialogClose}>
+                    <DialogTitle style={{ color: "#8C52FF" }}>Add A New Block</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please input a name for your block
+                        </DialogContentText>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Block Name"
+                                    type="text"
+                                    fullWidth
+                                    variant="standard"
+                                    value={blockName}
+                                    onChange={(e) => setBlockName(e.target.value)}
+                                    style={{color: "#000000"}}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <DialogContentText>
+                                    Estimate about how long this block will take to complete
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField 
+                                    select
+                                    id="hourSelect"
+                                    label="Hours"
+                                    value={blockHours}
+                                    onChange={(e) => setBlockHours(e.target.value)}
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {hoursInputs.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField 
+                                    select
+                                    id="minuteSelect"
+                                    label="Minutes"
+                                    value={blockMinutes}
+                                    onChange={(e) => setBlockMinutes(e.target.value)}
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {minutesInputs.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DialogContentText>
+                                    Pick a color for your block
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={8}>
+                                    {
+                                        palette.map((option) => (
+                                            <IconButton key={option.color} onClick={() => setBlockColor(option.color)}>
+                                                <SquareIcon style={{backgroundColor: option.color, color: option.color}} />
+                                            </IconButton>
+                                        ))
+                                    }
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DialogContentText>
+                                    Selected Color:
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <DialogContentText>
+                                    <SquareIcon style={{marginLeft: '8px', backgroundColor: blockColor, color: blockColor}} />
+                                </DialogContentText>
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={cancelAddNewBlock}>Cancel</Button>
+                        <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={addNewBlock}>Add Block</Button>
+                    </DialogActions>
+                </Dialog>
+            </Grid>
         </React.Fragment>
     );
 }
@@ -214,7 +487,7 @@ const DayCalendar = (props) => {
 
     React.useEffect(() => {
         getDaysOfMonth();
-    });
+    }, [setMonthIndex, setCurrYear]);
 
     return (
         <Grid container>
