@@ -43,8 +43,8 @@ const Block = (props) => {
             grid={[10,10]}
             bounds={{top: 0}}
         >
-            <div style={{width: '100%', height: blockHeight, display: 'flex', alignItems: 'center', textAlign: 'middle', backgroundColor: props.color, marginTop: '-640px', textAlign: 'left'}}>
-                <p style={{color: '#ffffff', width: '70%'}}>&nbsp;{props.name}</p>
+            <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute'}}>
+                <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex'}}>&nbsp;{props.name}</p>
                 <IconButton style={{float: 'right', width: '10%', }}>
                     <CreateIcon style={{color: '#ffffff'}} />
                 </IconButton>
@@ -59,6 +59,7 @@ const Block = (props) => {
 }
 
 const DayItem = (props) => {
+
     let dateNum;
     let circleColor = "#ffffff";
     let textColor= "#000000";
@@ -79,14 +80,9 @@ const DayItem = (props) => {
         );
     }
 
-    // ISSUE IS HERE MAYBE
-
-    const blockItems = props.blocks.map((block) => 
-        <Block name={block.name} duration={block.duration} color={block.color} key={block.key} id={block.key} />             
-    );
-
     return (
-        <div style={{backgroundColor: 'white', height: '600px'}}>
+        <>
+        <div style={{backgroundColor: 'white', height: '600px', positiion: 'relative'}}>
 
             <div style={{height: '3px'}}></div>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, paddingTop: '2px', marginLeft: '3px', color: textColor}}>
@@ -94,11 +90,16 @@ const DayItem = (props) => {
             </div>
 
             {divs}
-
-            {blockItems}
-
             
         </div>
+        <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
+            {
+                [...props.blocks].map((block) => (
+                    <Block name={block.name} duration={block.duration} color={block.color} key={block.key} id={block.key} />  
+                    ))
+            }
+        </div>
+        </>
     );
 }
 
@@ -290,9 +291,9 @@ const CalendarRow = (props) => {
             console.log(newBlock);
             let prevBlocks = blocks;
             prevBlocks.push(newBlock);
-            setBlocks(prevBlocks);
+            setBlocks([...prevBlocks]);
             console.log(blocks);
-            console.log(prevBlocks);
+            //console.log(prevBlocks);
         }
     }
 
@@ -304,6 +305,8 @@ const CalendarRow = (props) => {
         setBlockMinutes(0);
         setBlockColor("#da5151");
     }
+
+    React.useEffect(() => {}, [blocks])
 
     return (
         <React.Fragment>
