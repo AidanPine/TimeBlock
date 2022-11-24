@@ -1,8 +1,11 @@
 import React from 'react';
-import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, DialogContentText } from '@mui/material';
+import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, DialogContentText, Checkbox } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SquareIcon from '@mui/icons-material/Square';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Draggable from 'react-draggable';
 
 const randomKey = (length) => {
     const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -30,6 +33,31 @@ const randomKey = (length) => {
     return key;
 }
 
+const Block = (props) => {
+    // start marginTop = -640px, add yPos to that to get real starting pos after drag
+    const blockHeight = props.duration*39 + (props.duration-1);
+
+    return (
+        <Draggable
+            axis="y"
+            grid={[10,10]}
+            bounds={{top: 0}}
+        >
+            <div style={{width: '100%', height: blockHeight, display: 'flex', alignItems: 'center', textAlign: 'middle', backgroundColor: props.color, marginTop: '-640px', textAlign: 'left'}}>
+                <p style={{color: '#ffffff', width: '70%'}}>&nbsp;{props.name}</p>
+                <IconButton style={{float: 'right', width: '10%', }}>
+                    <CreateIcon style={{color: '#ffffff'}} />
+                </IconButton>
+                <IconButton style={{float: 'right', width: '10%', }}>
+                    <DeleteIcon style={{color: '#ffffff'}} />
+                </IconButton>
+                <Checkbox style={{float: 'right', width: '10%', color: '#ffffff'}} />
+            </div>
+        </Draggable>
+    );
+
+}
+
 const DayItem = (props) => {
     let dateNum;
     let circleColor = "#ffffff";
@@ -51,6 +79,12 @@ const DayItem = (props) => {
         );
     }
 
+    // ISSUE IS HERE MAYBE
+
+    const blockItems = props.blocks.map((block) => 
+        <Block name={block.name} duration={block.duration} color={block.color} key={block.key} id={block.key} />             
+    );
+
     return (
         <div style={{backgroundColor: 'white', height: '600px'}}>
 
@@ -60,6 +94,9 @@ const DayItem = (props) => {
             </div>
 
             {divs}
+
+            {blockItems}
+
             
         </div>
     );
@@ -248,8 +285,14 @@ const CalendarRow = (props) => {
             setBlockMinutes(0);
             setBlockColor("#da5151");
 
+            // ISSUE IS ALSO MAYBE HERE
+
             console.log(newBlock);
-            setBlocks(blocks.concat(newBlock));
+            let prevBlocks = blocks;
+            prevBlocks.push(newBlock);
+            setBlocks(prevBlocks);
+            console.log(blocks);
+            console.log(prevBlocks);
         }
     }
 
@@ -269,7 +312,7 @@ const CalendarRow = (props) => {
                 <HatchMarks />
             </Grid>
             <Grid item xs={4}>
-                <DayItem day={props.days[props.dayIndex]} />
+                <DayItem day={props.days[props.dayIndex]} blocks={blocks} />
             </Grid>
             <Grid item xs={2}>
                 <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
