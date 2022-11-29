@@ -34,26 +34,73 @@ const randomKey = (length) => {
 }
 
 const Block = (props) => {
-    // start marginTop = -640px, add yPos to that to get real starting pos after drag
     const blockHeight = props.duration*39 + (props.duration-1);
+    const [completed, setCompleted] = React.useState(props.completed);
+    const [yPos, setYPos] = React.useState(props.yPos);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+
+    const editBlock = () => {
+        props.handleEdit(props.id, props.name, props.hours, props.minutes, props.color);
+    }
+
+    const deleteBlock = () => {
+        props.handleDelete(props.id);
+    }
+
+    const toggleCompleted = () => {
+        setCompleted(!completed);
+        props.handleCompleted(props.id, !completed);
+    }
+
+    const handleDrag = (e, ui) => {
+        //console.log(yPos + ui.deltaY);
+        setYPos(yPos + ui.deltaY);
+        props.updateYPos(props.id, yPos + ui.deltaY);
+    }
+
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    }
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    }
 
     return (
-        <Draggable
-            axis="y"
-            grid={[10,10]}
-            bounds={{top: 0}}
-        >
-            <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute'}}>
-                <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex'}}>&nbsp;{props.name}</p>
-                <IconButton style={{float: 'right', width: '10%', }}>
-                    <CreateIcon style={{color: '#ffffff'}} />
-                </IconButton>
-                <IconButton style={{float: 'right', width: '10%', }}>
-                    <DeleteIcon style={{color: '#ffffff'}} />
-                </IconButton>
-                <Checkbox style={{float: 'right', width: '10%', color: '#ffffff'}} />
-            </div>
-        </Draggable>
+        <>
+            <Draggable
+                axis="y"
+                grid={[10,10]}
+                bounds={{top: 0}}
+                defaultPosition={{
+                    x: 0,
+                    y: yPos
+                }}
+                onDrag={handleDrag}
+            >
+                <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer'}}>
+                    <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex', textDecoration: completed ? 'line-through' : ''}}>&nbsp;{props.name}</p>
+                    <IconButton style={{float: 'right', width: '10%'}} onClick={editBlock}>
+                        <CreateIcon style={{color: '#ffffff'}} />
+                    </IconButton>
+                    <IconButton style={{float: 'right', width: '10%'}} onClick={handleDialogOpen}>
+                        <DeleteIcon style={{color: '#ffffff'}} />
+                    </IconButton>
+                    <Checkbox style={{float: 'right', width: '10%', color: '#ffffff'}} checked={completed} onChange={toggleCompleted} />
+                </div>
+            </Draggable>
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to delete this block?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={handleDialogClose}>No, Cancel</Button>
+                        <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={deleteBlock}>Yes, Delete Block</Button>
+                    </DialogActions>
+            </Dialog>
+        </>
     );
 
 }
@@ -95,8 +142,13 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
             {
                 [...props.blocks].map((block) => (
-                    <Block name={block.name} duration={block.duration} color={block.color} key={block.key} id={block.key} />  
-                    ))
+                    block.day === dateNum+1 ? <Block 
+                        name={block.name} hours={block.hours} minutes={block.minutes} 
+                        duration={block.duration} color={block.color} key={block.key} 
+                        id={block.key} handleEdit={props.handleEdit} handleDelete={props.handleDelete} 
+                        handleCompleted={props.handleCompleted} completed={block.completed} yPos={block.yPos} updateYPos={props.updateYPos}
+                    /> : null
+                ))
             }
         </div>
         </>
@@ -249,10 +301,12 @@ const CalendarRow = (props) => {
     ]
 
     const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false);
     const [blockName, setBlockName] = React.useState("");
     const [blockHours, setBlockHours] = React.useState(0);
     const [blockMinutes, setBlockMinutes] = React.useState(0);
     const [blockColor, setBlockColor] = React.useState("#da5151");
+    const [blockKey, setBlockKey] = React.useState("");
 
     const [blocks, setBlocks] = React.useState([]);
 
@@ -262,6 +316,15 @@ const CalendarRow = (props) => {
 
     const handleDialogClose = () => {
         setAddDialogOpen(false);
+    }
+
+    const handleEditClose = () => {
+        setEditDialogOpen(false);
+        setBlockKey("");
+        setBlockName("");
+        setBlockHours(0);
+        setBlockMinutes(0);
+        setBlockColor("#da5151");
     }
 
     const addNewBlock = () => {
@@ -278,7 +341,10 @@ const CalendarRow = (props) => {
                 color: blockColor, 
                 completed: false,
                 yPos: 0,
-                key: newKey
+                key: newKey,
+                day: props.dayIndex,
+                month: props.monthIndex,
+                year: props.currYear
             }
             setAddDialogOpen(false);
             setBlockName("");
@@ -286,14 +352,9 @@ const CalendarRow = (props) => {
             setBlockMinutes(0);
             setBlockColor("#da5151");
 
-            // ISSUE IS ALSO MAYBE HERE
-
-            console.log(newBlock);
             let prevBlocks = blocks;
             prevBlocks.push(newBlock);
             setBlocks([...prevBlocks]);
-            console.log(blocks);
-            //console.log(prevBlocks);
         }
     }
 
@@ -306,6 +367,90 @@ const CalendarRow = (props) => {
         setBlockColor("#da5151");
     }
 
+    const editBlock = () => {
+        const duration = blockHours + (blockMinutes/60);
+        let newBlocks = [];
+        for (let block of blocks) {
+            if (block.key === blockKey) {
+                let newBlock = {
+                    name: blockName,
+                    hours: blockHours,
+                    minutes: blockMinutes,
+                    duration: duration,
+                    color: blockColor, 
+                    completed: false,
+                    yPos: 0,
+                    key: blockKey,
+                    day: props.dayIndex,
+                    month: props.monthIndex,
+                    year: props.currYear
+                }
+                newBlocks.push(newBlock);
+            } else {
+                newBlocks.push(block);
+            }
+        }
+
+        setBlocks([...newBlocks]);
+        setEditDialogOpen(false);
+        setBlockKey("");
+        setBlockName("");
+        setBlockHours(0);
+        setBlockMinutes(0);
+        setBlockColor("#da5151");
+    }
+
+    const cancelEditBlock = () => {
+        setEditDialogOpen(false);
+        setBlockKey("");
+        setBlockName("");
+        setBlockHours(0);
+        setBlockMinutes(0);
+        setBlockColor("#da5151");
+    }
+
+    const handleEdit = (key, name, hours, minutes, color) => {
+        setBlockKey(key);
+        setBlockName(name);
+        setBlockHours(hours);
+        setBlockMinutes(minutes);
+        setBlockColor(color);
+        setEditDialogOpen(true);
+    }
+
+    const handleDelete = (key) => {
+        let newBlocks = [];
+        for (let block of blocks) {
+            if (block.key !== key) {
+                newBlocks.push(block);
+            }
+        }
+
+        setBlocks([...newBlocks]);
+    }
+
+    const handleCompleted = (key, completed) => {
+        let newBlocks = [];
+        for (let block of blocks) {
+            if (block.key === key) {
+                block.completed = completed;
+            }
+            newBlocks.push(block)
+        }
+
+        setBlocks([...newBlocks]);
+    }
+
+    const updateYPos = (key, yPos) => {
+        let newBlocks = [];
+        for (let block of blocks) {
+            if (block.key === key) {
+                block.yPos = yPos;
+            }
+            newBlocks.push(block)
+        }
+    }
+
     React.useEffect(() => {}, [blocks])
 
     return (
@@ -315,10 +460,14 @@ const CalendarRow = (props) => {
                 <HatchMarks />
             </Grid>
             <Grid item xs={4}>
-                <DayItem day={props.days[props.dayIndex]} blocks={blocks} />
+                <DayItem day={props.days[props.dayIndex]} blocks={blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} />
             </Grid>
             <Grid item xs={2}>
                 <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
+                
+                {
+                    // ADD DIALOG
+                }
                 <Dialog open={addDialogOpen} onClose={handleDialogClose}>
                     <DialogTitle style={{ color: "#8C52FF" }}>Add A New Block</DialogTitle>
                     <DialogContent>
@@ -408,6 +557,101 @@ const CalendarRow = (props) => {
                     <DialogActions>
                         <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={cancelAddNewBlock}>Cancel</Button>
                         <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={addNewBlock}>Add Block</Button>
+                    </DialogActions>
+                </Dialog>
+
+                {
+                    // EDIT DIALOG
+                }
+                <Dialog open={editDialogOpen} onClose={handleEditClose}>
+                    <DialogTitle style={{ color: "#8C52FF" }}>Edit Block</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please input a name for your block
+                        </DialogContentText>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Block Name"
+                                    type="text"
+                                    fullWidth
+                                    variant="standard"
+                                    value={blockName}
+                                    onChange={(e) => setBlockName(e.target.value)}
+                                    style={{color: "#000000"}}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <DialogContentText>
+                                    Estimate about how long this block will take to complete
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField 
+                                    select
+                                    id="hourSelect"
+                                    label="Hours"
+                                    value={blockHours}
+                                    onChange={(e) => setBlockHours(e.target.value)}
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {hoursInputs.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField 
+                                    select
+                                    id="minuteSelect"
+                                    label="Minutes"
+                                    value={blockMinutes}
+                                    onChange={(e) => setBlockMinutes(e.target.value)}
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {minutesInputs.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DialogContentText>
+                                    Pick a color for your block
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={8}>
+                                    {
+                                        palette.map((option) => (
+                                            <IconButton key={option.color} onClick={() => setBlockColor(option.color)}>
+                                                <SquareIcon style={{backgroundColor: option.color, color: option.color}} />
+                                            </IconButton>
+                                        ))
+                                    }
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DialogContentText>
+                                    Selected Color:
+                                </DialogContentText>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <DialogContentText>
+                                    <SquareIcon style={{marginLeft: '8px', backgroundColor: blockColor, color: blockColor}} />
+                                </DialogContentText>
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={cancelEditBlock}>Cancel</Button>
+                        <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={editBlock}>Edit Block</Button>
                     </DialogActions>
                 </Dialog>
             </Grid>
@@ -587,7 +831,7 @@ const DayCalendar = (props) => {
                             <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
                         </IconButton>
                     </Grid>
-                    <CalendarRow days={arrayOfDays} dayIndex={day} />
+                    <CalendarRow days={arrayOfDays} dayIndex={day} monthIndex={monthIndex} currYear={currYear} />
                     <Grid item xs={1}>
                         <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextDay}>
                             <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />
