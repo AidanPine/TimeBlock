@@ -29,10 +29,7 @@ const initialAuthState = {
     authError: null,
 };
 
-const initialBlocksState = {
-    blocks: [
-    ]
-};
+const initialBlocksState = [];
 
 export function authReducer(state=initialAuthState, action) {
     switch(action.type) {
@@ -70,9 +67,16 @@ export function blocksReducer(state = initialBlocksState, action) {
         case Types.ADD_EVENT:
             return [
                 ...state,
-
                 action.payload.block
-            ]
+            ];
+        case Types.EDIT_BLOCK:
+            let newState = [...state];
+            for (let block of newState) {
+                if (block.key === action.payload.block.key) {
+                    block = action.payload.block;
+                }
+            }
+            return newState;
         default:
             return state;
     }

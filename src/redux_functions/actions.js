@@ -41,7 +41,9 @@ export const ActionCreators = {
 
     signupError: (error) => ({type: Types.SIGNUP_ERROR, payload: { error } }),
 
-    addEvent: (block) => ({ type: Types.ADD_EVENT, payload: { block } })
+    addEvent: (block) => ({ type: Types.ADD_EVENT, payload: { block } }),
+
+    editBlock: (block) => ({ type: Types.EDIT_BLOCK, payload: { block } })
 }
 
 export const signIn = (credentials) => {
@@ -108,21 +110,35 @@ export const signUp = (newUser) => {
 
 export const addBlock = (newBlock) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
+        console.log(newBlock);
         const firebase = getFirebase();
         const firestore = getFirestore();
 
-        const user =  firebase.auth().currentUser.uid;
-        let blockID = randomKey(8);
+        const user =  firebase.auth().currentUser;
         if (user) {
-            firestore.collection('users').doc(user.uid).collection('blocks').add({
-                ...newBlock,
-            }).then((response, blockID) => {
-                blockID = response.id;
-            })
+            firestore.collection('users').doc(user.uid).collection('blocks').doc(newBlock.key).set(newBlock);
         }
         dispatch(ActionCreators.addEvent({
                 ...newBlock,
-                id: blockID
+            })
+        );
+        console.log(getState());
+    }
+}
+
+export const editBlock = (block) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+
+        const user = firebase.auth().currentUser.uid;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('blocks').doc(block.key).set({
+                ...block,
+            })
+        }
+        dispatch(ActionCreators.editBlock({
+                ...block,
             })
         );
     }

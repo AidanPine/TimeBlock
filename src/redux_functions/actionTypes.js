@@ -4,5 +4,6 @@ export const Types = {
     LOGOUT: 'LOGOUT',
     SIGNUP: 'SIGNUP',
     SIGNUP_ERROR: 'SIGNUP_ERROR',
-    ADD_EVENT: 'ADD_EVENT'
+    ADD_EVENT: 'ADD_EVENT',
+    EDIT_BLOCK: 'EDIT_BLOCK'
 }
