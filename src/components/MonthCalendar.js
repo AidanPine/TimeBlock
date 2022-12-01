@@ -4,6 +4,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import CircleIcon from '@mui/icons-material/Circle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { connect } from 'react-redux';
 import DOTWRow from './DOTWRow';
 // import getMonthArray from '../data_functions/getMonthArray';
@@ -11,7 +12,7 @@ import DOTWRow from './DOTWRow';
 const MonthBlock = (props) => {
     return (
         <Grid item xs={2} style={{height: '20px', marginBottom: '5px'}}>
-            <CircleIcon style={{color: props.color, fontSize: '1.25vw'}} />
+            {props.completed ? <CheckCircleIcon style={{color: props.color, fontSize: '1.25vw'}} /> : <CircleIcon style={{color: props.color, fontSize: '1.25vw'}} />}
         </Grid>
     );
 }
@@ -52,7 +53,7 @@ const CalendarItem = (props) => {
             {
                 
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+3 && props.day.isInMonth && block.month === props.monthIndex && block.year === props.currYear ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 && props.day.isInMonth && block.month === props.monthIndex && block.year === props.currYear ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} completed={block.completed} /> : null
                 ))
             }
             </Grid>

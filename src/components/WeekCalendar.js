@@ -44,7 +44,7 @@ const WeekBlock = (props) => {
     return (
         <Grid container style={{textAlign: 'left', width: '95%', display: 'flex', position: 'relative',  marginLeft: '2.5%', marginBottom: '3px', backgroundColor: props.color, borderRadius: '5px'}}>
             <Grid item xs={12} style={{height: '12px'}}>
-                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px', marginTop: '5px'}}>{truncatedName}</p>
+                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px', marginTop: '5px', textDecoration: props.completed ? 'line-through' : ''}}>{truncatedName}</p>
             </Grid>
             <Grid item xs={12} style={{height: '35px'}}>
                 <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px'}}>{startTimeStr} - {endTimeStr}</p>
@@ -87,7 +87,7 @@ const DayItem = (props) => {
                 <div style={{height: '3px'}}></div>
             {
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} completed={block.completed} /> : null
                 ))
             }
             </div>
