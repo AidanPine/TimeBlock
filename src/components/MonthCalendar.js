@@ -3,10 +3,19 @@ import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } fr
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import CircleIcon from '@mui/icons-material/Circle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { connect } from 'react-redux';
 import DOTWRow from './DOTWRow';
-import getMonthArray from '../data_functions/getMonthArray';
+// import getMonthArray from '../data_functions/getMonthArray';
 
+const MonthBlock = (props) => {
+    return (
+        <Grid item xs={2} style={{height: '20px', marginBottom: '5px'}}>
+            {props.completed ? <CheckCircleIcon style={{color: props.color, fontSize: '1.25vw'}} /> : <CircleIcon style={{color: props.color, fontSize: '1.25vw'}} />}
+        </Grid>
+    );
+}
 
 const CalendarItem = (props) => {
     let dateNum;
@@ -24,17 +33,88 @@ const CalendarItem = (props) => {
     }
 
     const handleClick = e => {
-        console.log(props.day.index); // return day that is clicked on, soon take to day view of this day
+        console.log(props.day.index); // return day that is clicked on, take to day view of this day
         if (props.day.isInMonth) {
             props.handleDayClick(props.day.index);
         }
     }
 
+    let sortedBlocks = props.blocks;
+    sortedBlocks.sort((a,b) => {
+        return a.yPos - b.yPos;
+    });
+
+    const monthOffsets = [
+        {
+            month: 1,
+            offset: 4
+        },
+        {
+            month: 2,
+            offset: 0
+        },
+        {
+            month: 3,
+            offset: 3
+        },
+        {
+            month: 4,
+            offset: 4
+        },
+        {
+            month: 5,
+            offset: 0
+        },
+        {
+            month: 6,
+            offset: 3
+        },
+        {
+            month: 7,
+            offset: 4
+        },
+        {
+            month: 8,
+            offset: 0
+        },
+        {
+            month: 9,
+            offset: 3
+        },
+        {
+            month: 10,
+            offset: 4
+        },
+        {
+            month: 11,
+            offset: 0
+        },
+        {
+            month: 12,
+            offset: 3
+        }
+    ];
+
+    let offset = 0;
+    for (let month of monthOffsets) {
+        if (month.month === props.monthIndex) {
+            offset = month.offset;
+        }
+    }
+
     return (
-        <Paper style={{padding: '10px 90px 50px 10px', textAlign: 'center', borderRadius: '0px', color: color}} onClick={handleClick}>
-            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
+        <Paper style={{height: '110px', textAlign: 'center', borderRadius: '0px', color: color, border: '1px solid #000000', width: '100%'}} onClick={handleClick}>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, margin: '3px'}}>
                 {dateNum}
             </div>
+            <Grid container style={{marginTop: '5px', width: '100%'}}>
+            {
+                
+                sortedBlocks.map((block, index) => (
+                    block.day === dateNum+offset && props.day.isInMonth && block.month === props.monthIndex && block.year === props.currYear ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} completed={block.completed} /> : null
+                ))
+            }
+            </Grid>
         </Paper>
     );
 }
@@ -55,25 +135,25 @@ const CalendarRow = (props) => {
                 </IconButton>
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[0]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[0]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[1]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[1]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[2]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[2]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[3]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[3]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[4]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[4]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[5]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[5]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[6]} handleDayClick={props.getDay} />
+                <CalendarItem day={props.days[6]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1} />
             
@@ -261,22 +341,22 @@ const MonthCalendar = (props) => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} getDay={props.handleClickDay} />
+                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />

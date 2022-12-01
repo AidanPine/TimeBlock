@@ -61,13 +61,15 @@ const Dashboard = (props) => {
 
     const [tabValue, setTabValue] = React.useState(0);
 
-    const [currDay, setCurrDay] = React.useState(today);
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
     const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(thisYear);
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
     const [dayIndex, setDayIndex] = React.useState(dayInd+1);
+
+    // get blocks from firebase, for now we will use empty array and useState()
+    const [blocks, setBlocks] = React.useState([]);
 
     const handleTabChange = (e, newTabValue) => {
         setTabValue(newTabValue);
@@ -97,9 +99,13 @@ const Dashboard = (props) => {
         setCurrYear(newYear);
     }
 
+    const updateBlocks = (newBlocks) => {
+        setBlocks(newBlocks);
+    }
+
     return (
         <div className="App">
-            <Grid container spacing={3} align="right" style={{marginTop: "0px"}}>
+            <Grid container spacing={3} align="right" style={{height: "60px", marginTop: '-20px'}}>
                 <Grid item xs={2} sm={2} md={2} lg={1} align="left">
                     <img src={logo} alt="logo" style={{width: "30px", marginLeft: "20px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
                 </Grid>
@@ -115,7 +121,7 @@ const Dashboard = (props) => {
                     </IconButton>
                 </Grid>
             </Grid>
-            <Grid item xs={12} style={{marginTop: '50px'}} />
+            <Grid item xs={12} style={{marginTop: '10px'}} />
             <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 
@@ -130,21 +136,26 @@ const Dashboard = (props) => {
                     // TAB PANEL FOR MONTH
                 }
                 <TabPanel value={tabValue} index={0}>
-                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} handleClickDay={handleClickDay} />
+                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} handleClickDay={handleClickDay} blocks={blocks} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} handleClickDay={handleClickDay} />
+                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} handleClickDay={handleClickDay} blocks={blocks} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR DAY
                 }
                 <TabPanel value={tabValue} index={2}>
-                    <DayCalendar day={currDay} month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} dayIndex={dayIndex} />
+                    <DayCalendar 
+                        day={today} month={monthIndex} year={currYear} 
+                        dayArray={arrayOfDays} startWeekIndex={weekStartIndex} 
+                        endWeekIndex={weekEndIndex} setMonth={setMonth} 
+                        setYear={setYear} dayIndex={dayIndex} blocks={blocks} updateBlocks={updateBlocks}
+                    />
                 </TabPanel>
 
                 {

@@ -38,6 +38,7 @@ const Block = (props) => {
     const [completed, setCompleted] = React.useState(props.completed);
     const [yPos, setYPos] = React.useState(props.yPos);
     const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [zIndex, setZIndex] = React.useState(1);
 
     const editBlock = () => {
         props.handleEdit(props.id, props.name, props.hours, props.minutes, props.color);
@@ -54,8 +55,13 @@ const Block = (props) => {
 
     const handleDrag = (e, ui) => {
         //console.log(yPos + ui.deltaY);
+        setZIndex(1000);
         setYPos(yPos + ui.deltaY);
         props.updateYPos(props.id, yPos + ui.deltaY);
+    }
+
+    const handleStop = () => {
+        setZIndex(1);
     }
 
     const handleDialogOpen = () => {
@@ -77,8 +83,9 @@ const Block = (props) => {
                     y: yPos
                 }}
                 onDrag={handleDrag}
+                onStop={handleStop}
             >
-                <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer'}}>
+                <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer', zIndex: zIndex}}>
                     <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex', textDecoration: completed ? 'line-through' : ''}}>&nbsp;{props.name}</p>
                     <IconButton style={{float: 'right', width: '10%'}} onClick={editBlock}>
                         <CreateIcon style={{color: '#ffffff'}} />
@@ -106,7 +113,6 @@ const Block = (props) => {
 }
 
 const DayItem = (props) => {
-
     let dateNum;
     let circleColor = "#ffffff";
     let textColor= "#000000";
@@ -123,8 +129,66 @@ const DayItem = (props) => {
     let divs = [];
     for (let i = 0; i < 17; i++) {
         divs.push(
-            <div style={{width: '100%', backgroundColor: '#ffffff', height: '39px', borderBottom: '1px solid #eeeeee'}}></div>
+            <div style={{width: '100%', backgroundColor: '#ffffff', height: '39px', borderBottom: '1px solid #c2c2c2'}}></div>
         );
+    }
+
+    const monthOffsets = [
+        {
+            month: 1,
+            offset: 4
+        },
+        {
+            month: 2,
+            offset: 0
+        },
+        {
+            month: 3,
+            offset: 3
+        },
+        {
+            month: 4,
+            offset: 4
+        },
+        {
+            month: 5,
+            offset: 0
+        },
+        {
+            month: 6,
+            offset: 3
+        },
+        {
+            month: 7,
+            offset: 4
+        },
+        {
+            month: 8,
+            offset: 0
+        },
+        {
+            month: 9,
+            offset: 3
+        },
+        {
+            month: 10,
+            offset: 4
+        },
+        {
+            month: 11,
+            offset: 0
+        },
+        {
+            month: 12,
+            offset: 3
+        }
+    ];
+
+    let offset = 0;
+    for (let month of monthOffsets) {
+        if (month.month === props.monthIndex) {
+            offset = month.offset;
+        }
     }
 
     return (
@@ -142,7 +206,7 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
             {
                 [...props.blocks].map((block) => (
-                    block.day === dateNum+1 ? <Block 
+                    block.day === dateNum+offset && block.month === props.monthIndex && block.year === props.currYear ? <Block 
                         name={block.name} hours={block.hours} minutes={block.minutes} 
                         duration={block.duration} color={block.color} key={block.key} 
                         id={block.key} handleEdit={props.handleEdit} handleDelete={props.handleDelete} 
@@ -308,7 +372,7 @@ const CalendarRow = (props) => {
     const [blockColor, setBlockColor] = React.useState("#da5151");
     const [blockKey, setBlockKey] = React.useState("");
 
-    const [blocks, setBlocks] = React.useState([]);
+    const [blocks, setBlocks] = React.useState(props.blocks);
 
     const handleDialogOpen = () => {
         setAddDialogOpen(true);
@@ -355,6 +419,7 @@ const CalendarRow = (props) => {
             let prevBlocks = blocks;
             prevBlocks.push(newBlock);
             setBlocks([...prevBlocks]);
+            props.updateBlocks([...prevBlocks]);
         }
     }
 
@@ -398,6 +463,7 @@ const CalendarRow = (props) => {
         setBlockHours(0);
         setBlockMinutes(0);
         setBlockColor("#da5151");
+        props.updateBlocks([...newBlocks]);
     }
 
     const cancelEditBlock = () => {
@@ -427,6 +493,7 @@ const CalendarRow = (props) => {
         }
 
         setBlocks([...newBlocks]);
+        props.updateBlocks([...newBlocks]);
     }
 
     const handleCompleted = (key, completed) => {
@@ -439,6 +506,7 @@ const CalendarRow = (props) => {
         }
 
         setBlocks([...newBlocks]);
+        props.updateBlocks([...newBlocks]);
     }
 
     const updateYPos = (key, yPos) => {
@@ -449,6 +517,8 @@ const CalendarRow = (props) => {
             }
             newBlocks.push(block)
         }
+        setBlocks([...newBlocks]);
+        props.updateBlocks([...newBlocks]);
     }
 
     React.useEffect(() => {}, [blocks])
@@ -460,7 +530,7 @@ const CalendarRow = (props) => {
                 <HatchMarks />
             </Grid>
             <Grid item xs={4}>
-                <DayItem day={props.days[props.dayIndex]} blocks={blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} />
+                <DayItem day={props.days[props.dayIndex]} blocks={blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={2}>
                 <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
@@ -685,8 +755,6 @@ const DayCalendar = (props) => {
     const [monthIndex, setMonthIndex] = React.useState(props.month); 
     const [arrayOfDays, setArrayOfDays] = React.useState(props.dayArray);
     const [currYear, setCurrYear] = React.useState(props.year); 
-    //const [weekStartIndex, setWeekStartIndex] = React.useState(props.startWeekIndex);
-    //const [weekEndIndex, setWeekEndIndex] = React.useState(props.endWeekIndex);
 
     const getDaysOfMonth = () => {
         let firstDayOfWeek = new Date(currYear + "-" + monthIndex + "-01").getDay(); // to tell which day of the week to start at
@@ -831,7 +899,7 @@ const DayCalendar = (props) => {
                             <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
                         </IconButton>
                     </Grid>
-                    <CalendarRow days={arrayOfDays} dayIndex={day} monthIndex={monthIndex} currYear={currYear} />
+                    <CalendarRow days={arrayOfDays} dayIndex={day} monthIndex={monthIndex} currYear={currYear} blocks={props.blocks} updateBlocks={props.updateBlocks} />
                     <Grid item xs={1}>
                         <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextDay}>
                             <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />
