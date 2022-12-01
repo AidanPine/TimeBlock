@@ -3,16 +3,51 @@ import { Grid, Typography, IconButton, FormControl, Select, MenuItem, Paper } fr
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DOTWRow from './DOTWRow';
-//import getMonthArray from '../data_functions/getMonthArray';
+import { timeCorrelations } from '../data_functions/timeCorrelations';
 
 const WeekBlock = (props) => {
+
+    let startTimeStr = "";
+    for (let i = 0; i < timeCorrelations.length; i++) {
+        if (props.yPos === timeCorrelations[i].yPos) {
+            startTimeStr = timeCorrelations[i].time;
+        }
+    }
+
+    let endTimeStr = "";
+    let endPos = props.yPos;
+    if (props.hours !== 0) {
+        endPos += props.hours*40;
+    }
+    if (props.minutes === 15) {
+        endPos += 10;
+    }
+    if (props.minutes === 30) {
+        endPos += 20;
+    }
+    if (props.minutes === 45) {
+        endPos += 30;
+    }
+    for (let i = 0; i < timeCorrelations.length; i++) {
+        if (endPos === timeCorrelations[i].yPos) {
+            endTimeStr = timeCorrelations[i].time;
+        }
+    }
+
+    let truncatedName = "";
+    if (props.name.length > 24) {
+        truncatedName = props.name.substring(0, 20) + "...";
+    } else {
+        truncatedName = props.name;
+    }
+
     return (
         <Grid container style={{textAlign: 'left', width: '95%', display: 'flex', position: 'relative',  marginLeft: '2.5%', marginBottom: '3px', backgroundColor: props.color, borderRadius: '5px'}}>
-            <Grid item xs={12} style={{height: '20px'}}>
-                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px', marginTop: '5px'}}>{props.name}</p>
+            <Grid item xs={12} style={{height: '12px'}}>
+                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px', marginTop: '5px'}}>{truncatedName}</p>
             </Grid>
             <Grid item xs={12} style={{height: '35px'}}>
-                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px'}}>{props.hours} hr {props.minutes} mins</p>
+                <p style={{color: '#ffffff', fontSize: '12px', paddingLeft: '5px'}}>{startTimeStr} - {endTimeStr}</p>
             </Grid>
         </Grid>
     );
@@ -48,7 +83,7 @@ const DayItem = (props) => {
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, marginTop: '3px', marginBottom: '3px', marginLeft: '3px'}}>
                 {dateNum}
             </div>
-            <div style={{backgroundColor: '#ffffff', height: '1000px', position: 'relative', width: '100%', border: '1px solid #000000', marginLeft: '-1px'}}>
+            <div style={{backgroundColor: '#ffffff', height: '805px', position: 'relative', width: '100%', border: '1px solid #000000', marginLeft: '-1px'}}>
                 <div style={{height: '3px'}}></div>
             {
                 sortedBlocks.map((block, index) => (

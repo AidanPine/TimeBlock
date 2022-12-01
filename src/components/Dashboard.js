@@ -61,7 +61,6 @@ const Dashboard = (props) => {
 
     const [tabValue, setTabValue] = React.useState(0);
 
-    const [currDay, setCurrDay] = React.useState(today);
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
     const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
     const [currYear, setCurrYear] = React.useState(thisYear);
@@ -152,7 +151,7 @@ const Dashboard = (props) => {
                 }
                 <TabPanel value={tabValue} index={2}>
                     <DayCalendar 
-                        day={currDay} month={monthIndex} year={currYear} 
+                        day={today} month={monthIndex} year={currYear} 
                         dayArray={arrayOfDays} startWeekIndex={weekStartIndex} 
                         endWeekIndex={weekEndIndex} setMonth={setMonth} 
                         setYear={setYear} dayIndex={dayIndex} blocks={blocks} updateBlocks={updateBlocks}

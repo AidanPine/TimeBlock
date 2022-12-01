@@ -6,19 +6,14 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import CircleIcon from '@mui/icons-material/Circle';
 import { connect } from 'react-redux';
 import DOTWRow from './DOTWRow';
-import getMonthArray from '../data_functions/getMonthArray';
+// import getMonthArray from '../data_functions/getMonthArray';
 
 const MonthBlock = (props) => {
-    //let left = props.index*22 + 'px';
     return (
         <Grid item xs={2} style={{height: '20px', marginBottom: '5px'}}>
             <CircleIcon style={{color: props.color, fontSize: '1.25vw'}} />
-            {/* <div style={{textAlign: 'left', display: 'flex', flexDirection: 'row', position: 'relative',  marginLeft: '2px', backgroundColor: props.color, borderRadius: '15px', height: '20px', width: '20px'}}></div> */}
         </Grid>
     );
-
-
-    
 }
 
 const CalendarItem = (props) => {
@@ -37,7 +32,7 @@ const CalendarItem = (props) => {
     }
 
     const handleClick = e => {
-        console.log(props.day.index); // return day that is clicked on, soon take to day view of this day
+        console.log(props.day.index); // return day that is clicked on, take to day view of this day
         if (props.day.isInMonth) {
             props.handleDayClick(props.day.index);
         }
