@@ -43,6 +43,11 @@ const CalendarItem = (props) => {
         }
     }
 
+    let sortedBlocks = props.blocks;
+    sortedBlocks.sort((a,b) => {
+        return a.yPos - b.yPos;
+    });
+
     return (
         <Paper style={{height: '110px', textAlign: 'center', borderRadius: '0px', color: color, border: '1px solid #000000', width: '100%'}} onClick={handleClick}>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, margin: '3px'}}>
@@ -51,7 +56,7 @@ const CalendarItem = (props) => {
             <Grid container style={{marginTop: '5px', width: '100%'}}>
             {
                 
-                [...props.blocks].map((block, index) => (
+                sortedBlocks.map((block, index) => (
                     block.day === dateNum+1 && props.day.isInMonth ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }

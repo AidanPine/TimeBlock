@@ -38,6 +38,11 @@ const DayItem = (props) => {
         props.handleDayClick(props.start + props.offset);
     }
 
+    let sortedBlocks = props.blocks;
+    sortedBlocks.sort((a,b) => {
+        return a.yPos - b.yPos;
+    });
+
     return (
         <Paper style={{width: '100%', textAlign: 'center', borderRadius: '0px', color: color, border: '1px solid #000000'}} onClick={handleClick}>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, marginTop: '3px', marginBottom: '3px', marginLeft: '3px'}}>
@@ -46,7 +51,7 @@ const DayItem = (props) => {
             <div style={{backgroundColor: '#ffffff', height: '1000px', position: 'relative', width: '100%', border: '1px solid #000000', marginLeft: '-1px'}}>
                 <div style={{height: '3px'}}></div>
             {
-                [...props.blocks].map((block, index) => (
+                sortedBlocks.map((block, index) => (
                     block.day === dateNum+1 ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }
