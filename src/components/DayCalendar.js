@@ -38,6 +38,7 @@ const Block = (props) => {
     const [completed, setCompleted] = React.useState(props.completed);
     const [yPos, setYPos] = React.useState(props.yPos);
     const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [zIndex, setZIndex] = React.useState(1);
 
     const editBlock = () => {
         props.handleEdit(props.id, props.name, props.hours, props.minutes, props.color);
@@ -54,8 +55,13 @@ const Block = (props) => {
 
     const handleDrag = (e, ui) => {
         //console.log(yPos + ui.deltaY);
+        setZIndex(1000);
         setYPos(yPos + ui.deltaY);
         props.updateYPos(props.id, yPos + ui.deltaY);
+    }
+
+    const handleStop = () => {
+        setZIndex(1);
     }
 
     const handleDialogOpen = () => {
@@ -77,8 +83,9 @@ const Block = (props) => {
                     y: yPos
                 }}
                 onDrag={handleDrag}
+                onStop={handleStop}
             >
-                <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer'}}>
+                <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer', zIndex: zIndex}}>
                     <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex', textDecoration: completed ? 'line-through' : ''}}>&nbsp;{props.name}</p>
                     <IconButton style={{float: 'right', width: '10%'}} onClick={editBlock}>
                         <CreateIcon style={{color: '#ffffff'}} />
@@ -142,7 +149,7 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
             {
                 [...props.blocks].map((block) => (
-                    block.day === dateNum+1 ? <Block 
+                    block.day === dateNum+3 ? <Block 
                         name={block.name} hours={block.hours} minutes={block.minutes} 
                         duration={block.duration} color={block.color} key={block.key} 
                         id={block.key} handleEdit={props.handleEdit} handleDelete={props.handleDelete} 

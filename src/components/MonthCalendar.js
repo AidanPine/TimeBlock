@@ -52,7 +52,7 @@ const CalendarItem = (props) => {
             {
                 
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+1 && props.day.isInMonth ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 && props.day.isInMonth ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }
             </Grid>

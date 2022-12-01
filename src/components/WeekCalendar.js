@@ -87,7 +87,7 @@ const DayItem = (props) => {
                 <div style={{height: '3px'}}></div>
             {
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+1 ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }
             </div>
