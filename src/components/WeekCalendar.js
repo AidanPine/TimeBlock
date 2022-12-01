@@ -87,7 +87,7 @@ const DayItem = (props) => {
                 <div style={{height: '3px'}}></div>
             {
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+3 ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }
             </div>
@@ -100,25 +100,25 @@ const CalendarRow = (props) => {
     return (
         <React.Fragment>
             <Grid item xs={1}>
-                <DayItem day={props.days[0]} offset={0} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[0]} offset={0} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[1]} offset={1} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[1]} offset={1} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[2]} offset={2} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[2]} offset={2} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[3]} offset={3} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[3]} offset={3} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[4]} offset={4} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[4]} offset={4} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[5]} offset={5} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[5]} offset={5} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <DayItem day={props.days[6]} offset={6} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} />
+                <DayItem day={props.days[6]} offset={6} start={props.startIndex} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
         </React.Fragment>
     );
@@ -302,7 +302,7 @@ const WeekCalendar = (props) => {
                             <ArrowBackIosNewIcon style={{color: '#ffffff'}} fontSize="inherit" />
                         </IconButton>
                     </Grid>
-                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} startIndex={weekStartIndex} endIndex={weekEndIndex} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(weekStartIndex, weekEndIndex)} startIndex={weekStartIndex} endIndex={weekEndIndex} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                     <Grid item xs={1}>
                         <IconButton style={{marginTop: '16px'}} size="large" onClick={handleNextWeek}>
                             <ArrowForwardIosIcon style={{color: '#ffffff'}} fontSize="inherit" />

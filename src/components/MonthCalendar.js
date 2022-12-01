@@ -52,7 +52,7 @@ const CalendarItem = (props) => {
             {
                 
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+3 && props.day.isInMonth ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
+                    block.day === dateNum+3 && props.day.isInMonth && block.month === props.monthIndex && block.year === props.currYear ? <MonthBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} /> : null
                 ))
             }
             </Grid>
@@ -76,25 +76,25 @@ const CalendarRow = (props) => {
                 </IconButton>
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[0]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[0]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[1]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[1]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[2]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[2]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[3]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[3]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[4]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[4]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[5]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[5]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1}>
-                <CalendarItem day={props.days[6]} handleDayClick={props.getDay} blocks={props.blocks} />
+                <CalendarItem day={props.days[6]} handleDayClick={props.getDay} blocks={props.blocks} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={1} />
             
@@ -282,22 +282,22 @@ const MonthCalendar = (props) => {
                     <DOTWRow />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(0, 7)} start={0} end={7} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(7, 14)} start={7} end={14} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(14, 21)} start={14} end={21} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(21, 28)} start={21} end={28} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(28, 35)} start={28} end={35} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
                 <Grid item xs={12} container spacing={1}>
-                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} />
+                    <CalendarRow days={arrayOfDays.slice(35, 42)} start={35} end={42} getWeek={props.handleClickWeek} getDay={props.handleClickDay} blocks={props.blocks} monthIndex={monthIndex} currYear={currYear} />
                 </Grid>
             </Grid>
             <Grid item xs={12} style={{height: '100px'}} />

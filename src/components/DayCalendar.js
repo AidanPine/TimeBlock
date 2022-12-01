@@ -113,7 +113,6 @@ const Block = (props) => {
 }
 
 const DayItem = (props) => {
-
     let dateNum;
     let circleColor = "#ffffff";
     let textColor= "#000000";
@@ -149,7 +148,7 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
             {
                 [...props.blocks].map((block) => (
-                    block.day === dateNum+3 ? <Block 
+                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <Block 
                         name={block.name} hours={block.hours} minutes={block.minutes} 
                         duration={block.duration} color={block.color} key={block.key} 
                         id={block.key} handleEdit={props.handleEdit} handleDelete={props.handleDelete} 
@@ -473,7 +472,7 @@ const CalendarRow = (props) => {
                 <HatchMarks />
             </Grid>
             <Grid item xs={4}>
-                <DayItem day={props.days[props.dayIndex]} blocks={blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} />
+                <DayItem day={props.days[props.dayIndex]} blocks={blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={2}>
                 <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
