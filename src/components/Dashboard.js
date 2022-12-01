@@ -106,7 +106,7 @@ const Dashboard = (props) => {
 
     return (
         <div className="App">
-            <Grid container spacing={3} align="right" style={{marginTop: "0px"}}>
+            <Grid container spacing={3} align="right" style={{height: "60px", marginTop: '-20px'}}>
                 <Grid item xs={2} sm={2} md={2} lg={1} align="left">
                     <img src={logo} alt="logo" style={{width: "30px", marginLeft: "20px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
                 </Grid>
@@ -122,7 +122,7 @@ const Dashboard = (props) => {
                     </IconButton>
                 </Grid>
             </Grid>
-            <Grid item xs={12} style={{marginTop: '50px'}} />
+            <Grid item xs={12} style={{marginTop: '10px'}} />
             <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 

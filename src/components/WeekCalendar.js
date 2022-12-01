@@ -40,10 +40,10 @@ const DayItem = (props) => {
 
     return (
         <Paper style={{width: '100%', textAlign: 'center', borderRadius: '0px', color: color, border: '1px solid #000000'}} onClick={handleClick}>
-            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor}}>
+            <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, marginTop: '3px', marginBottom: '3px', marginLeft: '3px'}}>
                 {dateNum}
             </div>
-            <div style={{backgroundColor: '#ffffff', height: '600px', position: 'relative', width: '100%', border: '1px solid #000000', marginLeft: '-1px'}}>
+            <div style={{backgroundColor: '#ffffff', height: '1000px', position: 'relative', width: '100%', border: '1px solid #000000', marginLeft: '-1px'}}>
                 <div style={{height: '3px'}}></div>
             {
                 [...props.blocks].map((block, index) => (

@@ -123,7 +123,7 @@ const DayItem = (props) => {
     let divs = [];
     for (let i = 0; i < 17; i++) {
         divs.push(
-            <div style={{width: '100%', backgroundColor: '#ffffff', height: '39px', borderBottom: '1px solid #eeeeee'}}></div>
+            <div style={{width: '100%', backgroundColor: '#ffffff', height: '39px', borderBottom: '1px solid #c2c2c2'}}></div>
         );
     }
 
