@@ -6,6 +6,7 @@ import SquareIcon from '@mui/icons-material/Square';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Draggable from 'react-draggable';
+import { monthOffsets } from '../data_functions/monthOffsets';
 
 const randomKey = (length) => {
     const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -133,61 +134,17 @@ const DayItem = (props) => {
         );
     }
 
-    const monthOffsets = [
-        {
-            month: 1,
-            offset: 4
-        },
-        {
-            month: 2,
-            offset: 0
-        },
-        {
-            month: 3,
-            offset: 3
-        },
-        {
-            month: 4,
-            offset: 4
-        },
-        {
-            month: 5,
-            offset: 0
-        },
-        {
-            month: 6,
-            offset: 3
-        },
-        {
-            month: 7,
-            offset: 4
-        },
-        {
-            month: 8,
-            offset: 0
-        },
-        {
-            month: 9,
-            offset: 3
-        },
-        {
-            month: 10,
-            offset: 4
-        },
-        {
-            month: 11,
-            offset: 0
-        },
-        {
-            month: 12,
-            offset: 3
-        }
-    ];
-
     let offset = 0;
-    for (let month of monthOffsets) {
-        if (month.month === props.monthIndex) {
-            offset = month.offset;
+    for (let yearOffset of monthOffsets) {
+        // console.log(yearOffset.year);
+        if (yearOffset.year === props.currYear) {
+            for (let month of yearOffset.offsets) {
+                // console.log(month.month);
+                if (month.month === props.monthIndex) {
+                    offset = month.offset;
+                    // console.log(yearOffset.year, month.month);
+                }
+            }
         }
     }
 

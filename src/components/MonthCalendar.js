@@ -7,7 +7,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { connect } from 'react-redux';
 import DOTWRow from './DOTWRow';
-// import getMonthArray from '../data_functions/getMonthArray';
+import { monthOffsets } from '../data_functions/monthOffsets';
 
 const MonthBlock = (props) => {
     return (
@@ -44,61 +44,17 @@ const CalendarItem = (props) => {
         return a.yPos - b.yPos;
     });
 
-    const monthOffsets = [
-        {
-            month: 1,
-            offset: 4
-        },
-        {
-            month: 2,
-            offset: 0
-        },
-        {
-            month: 3,
-            offset: 3
-        },
-        {
-            month: 4,
-            offset: 4
-        },
-        {
-            month: 5,
-            offset: 0
-        },
-        {
-            month: 6,
-            offset: 3
-        },
-        {
-            month: 7,
-            offset: 4
-        },
-        {
-            month: 8,
-            offset: 0
-        },
-        {
-            month: 9,
-            offset: 3
-        },
-        {
-            month: 10,
-            offset: 4
-        },
-        {
-            month: 11,
-            offset: 0
-        },
-        {
-            month: 12,
-            offset: 3
-        }
-    ];
-
     let offset = 0;
-    for (let month of monthOffsets) {
-        if (month.month === props.monthIndex) {
-            offset = month.offset;
+    for (let yearOffset of monthOffsets) {
+        // console.log(yearOffset.year);
+        if (yearOffset.year === props.currYear) {
+            for (let month of yearOffset.offsets) {
+                // console.log(month.month);
+                if (month.month === props.monthIndex) {
+                    offset = month.offset;
+                    // console.log(yearOffset.year, month.month);
+                }
+            }
         }
     }
 
