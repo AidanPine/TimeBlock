@@ -133,6 +133,64 @@ const DayItem = (props) => {
         );
     }
 
+    const monthOffsets = [
+        {
+            month: 1,
+            offset: 4
+        },
+        {
+            month: 2,
+            offset: 0
+        },
+        {
+            month: 3,
+            offset: 3
+        },
+        {
+            month: 4,
+            offset: 4
+        },
+        {
+            month: 5,
+            offset: 0
+        },
+        {
+            month: 6,
+            offset: 3
+        },
+        {
+            month: 7,
+            offset: 4
+        },
+        {
+            month: 8,
+            offset: 0
+        },
+        {
+            month: 9,
+            offset: 3
+        },
+        {
+            month: 10,
+            offset: 4
+        },
+        {
+            month: 11,
+            offset: 0
+        },
+        {
+            month: 12,
+            offset: 3
+        }
+    ];
+
+    let offset = 0;
+    for (let month of monthOffsets) {
+        if (month.month === props.monthIndex) {
+            offset = month.offset;
+        }
+    }
+
     return (
         <>
         <div style={{backgroundColor: 'white', height: '600px', positiion: 'relative'}}>
@@ -148,7 +206,7 @@ const DayItem = (props) => {
         <div style={{backgroundColor: 'transparent', height: '600px', position: 'relative', marginTop: '-530px', width: '100%'}}>
             {
                 [...props.blocks].map((block) => (
-                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <Block 
+                    block.day === dateNum+offset && block.month === props.monthIndex && block.year === props.currYear ? <Block 
                         name={block.name} hours={block.hours} minutes={block.minutes} 
                         duration={block.duration} color={block.color} key={block.key} 
                         id={block.key} handleEdit={props.handleEdit} handleDelete={props.handleDelete} 

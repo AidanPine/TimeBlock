@@ -78,6 +78,64 @@ const DayItem = (props) => {
         return a.yPos - b.yPos;
     });
 
+    const monthOffsets = [
+        {
+            month: 1,
+            offset: 4
+        },
+        {
+            month: 2,
+            offset: 0
+        },
+        {
+            month: 3,
+            offset: 3
+        },
+        {
+            month: 4,
+            offset: 4
+        },
+        {
+            month: 5,
+            offset: 0
+        },
+        {
+            month: 6,
+            offset: 3
+        },
+        {
+            month: 7,
+            offset: 4
+        },
+        {
+            month: 8,
+            offset: 0
+        },
+        {
+            month: 9,
+            offset: 3
+        },
+        {
+            month: 10,
+            offset: 4
+        },
+        {
+            month: 11,
+            offset: 0
+        },
+        {
+            month: 12,
+            offset: 3
+        }
+    ];
+
+    let offset = 0;
+    for (let month of monthOffsets) {
+        if (month.month === props.monthIndex) {
+            offset = month.offset;
+        }
+    }
+
     return (
         <Paper style={{width: '100%', textAlign: 'center', borderRadius: '0px', color: color, border: '1px solid #000000'}} onClick={handleClick}>
             <div style={{height: '25px', width: '25px', borderRadius: '20px', backgroundColor: circleColor, marginTop: '3px', marginBottom: '3px', marginLeft: '3px'}}>
@@ -87,7 +145,7 @@ const DayItem = (props) => {
                 <div style={{height: '3px'}}></div>
             {
                 sortedBlocks.map((block, index) => (
-                    block.day === dateNum+3 && block.month === props.monthIndex && block.year === props.currYear ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} completed={block.completed} /> : null
+                    block.day === dateNum+offset && block.month === props.monthIndex && block.year === props.currYear ? <WeekBlock name={block.name} hours={block.hours} minutes={block.minutes} color={block.color} yPos={block.yPos} index={index} completed={block.completed} /> : null
                 ))
             }
             </div>
