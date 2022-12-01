@@ -75,9 +75,11 @@ const DayItem = (props) => {
     }
 
     let sortedBlocks = props.blocks;
-    sortedBlocks.sort((a,b) => {
-        return a.yPos - b.yPos;
-    });
+    if (sortedBlocks) {
+        sortedBlocks.sort((a,b) => {
+            return a.yPos - b.yPos;
+        });
+    }
 
     let offset = 0;
     for (let yearOffset of monthOffsets) {
