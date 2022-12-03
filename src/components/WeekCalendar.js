@@ -74,7 +74,7 @@ const DayItem = (props) => {
         props.handleDayClick(props.start + props.offset);
     }
 
-    let sortedBlocks = props.blocks;
+    let sortedBlocks = [...props.blocks];
     if (sortedBlocks) {
         sortedBlocks.sort((a,b) => {
             return a.yPos - b.yPos;

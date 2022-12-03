@@ -69,7 +69,11 @@ const Dashboard = (props) => {
     const [dayIndex, setDayIndex] = React.useState(dayInd+1);
 
     // get blocks from firebase, for now we will use empty array and useState()
-    const [blocks, setBlocks] = React.useState([]);
+
+    //const [blocks, setBlocks] = React.useState(props.blocks);
+
+
+
 
     const handleTabChange = (e, newTabValue) => {
         setTabValue(newTabValue);
@@ -99,9 +103,10 @@ const Dashboard = (props) => {
         setCurrYear(newYear);
     }
 
+    /*
     const updateBlocks = (newBlocks) => {
         setBlocks(newBlocks);
-    }
+    }*/
 
     return (
         <div className="App">
@@ -136,14 +141,14 @@ const Dashboard = (props) => {
                     // TAB PANEL FOR MONTH
                 }
                 <TabPanel value={tabValue} index={0}>
-                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} handleClickDay={handleClickDay} blocks={blocks} />
+                    <MonthCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} setDayArray={setDayArray} setMonth={setMonth} setYear={setYear} handleClickWeek={handleClickWeek} handleClickDay={handleClickDay} blocks={props.blocks} />
                 </TabPanel>
 
                 {
                     // TAB PANEL FOR WEEK
                 }
                 <TabPanel value={tabValue} index={1}>
-                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} handleClickDay={handleClickDay} blocks={blocks} />
+                    <WeekCalendar month={monthIndex} year={currYear} dayArray={arrayOfDays} startWeekIndex={weekStartIndex} endWeekIndex={weekEndIndex} setMonth={setMonth} setYear={setYear} handleClickDay={handleClickDay} blocks={props.blocks} />
                 </TabPanel>
 
                 {
@@ -154,7 +159,7 @@ const Dashboard = (props) => {
                         day={today} month={monthIndex} year={currYear} 
                         dayArray={arrayOfDays} startWeekIndex={weekStartIndex} 
                         endWeekIndex={weekEndIndex} setMonth={setMonth} 
-                        setYear={setYear} dayIndex={dayIndex} blocks={blocks} updateBlocks={updateBlocks}
+                        setYear={setYear} dayIndex={dayIndex} blocks={props.blocks} //updateBlocks={updateBlocks}
                     />
                 </TabPanel>
 
@@ -183,10 +188,12 @@ const Dashboard = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    state.blocks.blocks = state.firestore.ordered.blocks;
+    if (state.firestore.ordered.blocks) {
+        state.blocks = state.firestore.ordered.blocks;
+    }
     console.log(state);
     return {
-        blocks: state.firestore.ordered.blocks,
+        blocks: state.blocks,
         auth: state.firebase.auth
     }
 }
