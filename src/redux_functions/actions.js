@@ -1,4 +1,5 @@
 import { Types } from './actionTypes';
+import { actionTypes } from "redux-firestore";
 
 const randomKey = (keyLength) => {
     const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -27,9 +28,6 @@ const randomKey = (keyLength) => {
 }
 
 export const ActionCreators = {
-    addUser: (user) => ({ type: Types.ADD_USER, payload: { user } }),
-
-    updateUser: (user) => ({ type: Types.UPDATE_USER, payload: { user } }),
 
     receiveLogin: (user) => ({ type: Types.LOGIN_SUCCESS, payload: { user } }),
 
@@ -41,7 +39,13 @@ export const ActionCreators = {
 
     signupError: (error) => ({type: Types.SIGNUP_ERROR, payload: { error } }),
 
-    addEvent: (block) => ({ type: Types.ADD_EVENT, payload: { block } })
+    addEvent: (block) => ({ type: Types.ADD_EVENT, payload: { block } }),
+
+    editBlock: (block) => ({ type: Types.EDIT_BLOCK, payload: { block } }),
+
+    deleteBlock: (blockID) => ({ type: Types.DELETE_BLOCK, payload: { blockID } }),
+
+    clearBlocks: () => ({ type: Types.CLEAR_BLOCKS, payload: { } })
 }
 
 export const signIn = (credentials) => {
@@ -69,6 +73,10 @@ export const signOut = () => {
 
         firebase.auth().signOut().then(() => {
             dispatch(ActionCreators.logout());
+        }).then(() => {
+            dispatch(ActionCreators.clearBlocks());
+            dispatch({ type: actionTypes.CLEAR_DATA })
+            console.log(getState());
         });
     }
 }
@@ -108,22 +116,50 @@ export const signUp = (newUser) => {
 
 export const addBlock = (newBlock) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
+        console.log(newBlock);
         const firebase = getFirebase();
         const firestore = getFirestore();
 
-        const user =  firebase.auth().currentUser.uid;
-        let blockID = randomKey(8);
+        const user =  firebase.auth().currentUser;
         if (user) {
-            firestore.collection('users').doc(user.uid).collection('blocks').add({
-                ...newBlock,
-            }).then((response, blockID) => {
-                blockID = response.id;
-            })
+            firestore.collection('users').doc(user.uid).collection('blocks').doc(newBlock.key).set(newBlock);
         }
         dispatch(ActionCreators.addEvent({
                 ...newBlock,
-                id: blockID
             })
         );
+        console.log(getState());
+    }
+}
+
+export const editBlock = (block) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+
+        const user = firebase.auth().currentUser;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('blocks').doc(block.key).set({
+                ...block,
+            })
+        }
+        dispatch(ActionCreators.editBlock({
+                ...block,
+            })
+        );
+        console.log(getState());
+    }
+}
+
+export const deleteBlock = (blockID) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+
+        const user = firebase.auth().currentUser;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('blocks').doc(blockID).delete();
+        }
+        dispatch(ActionCreators.deleteBlock(blockID));
     }
 }

@@ -5,12 +5,12 @@ import logo from '../assets/TimeBlock.png';
 import { Link } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-import { ActionCreators } from "../redux_functions/actions";
-import { useDispatch, useSelector } from "react-redux";
+import {ActionCreators, addBlock, signOut} from "../redux_functions/actions";
+import {connect, useDispatch, useSelector} from "react-redux";
 import { myFirebase } from "../firebase_functions/firebase";
 
 
-const Home = () => {
+const Home = (props) => {
     const [openLogin, setOpenLogin] = React.useState(false);
     const [openSignup, setOpenSignup] = React.useState(false);
     const authEmpty = useSelector(state => state.firebase.auth.isEmpty);
@@ -33,10 +33,7 @@ const Home = () => {
     }
 
     const handleSignOut = () => {
-        myFirebase.auth().signOut().then(() => {
-                dispatch(ActionCreators.logout());
-            }
-        );
+        props.signOut();
     }
 
     return (
@@ -122,4 +119,10 @@ const Home = () => {
     );
 }
 
-export default Home;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signOut: () => dispatch(signOut())
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Home);

@@ -29,10 +29,7 @@ const initialAuthState = {
     authError: null,
 };
 
-const initialBlocksState = {
-    blocks: [
-    ]
-};
+const initialBlocksState = [];
 
 export function authReducer(state=initialAuthState, action) {
     switch(action.type) {
@@ -66,13 +63,34 @@ export function authReducer(state=initialAuthState, action) {
 }
 
 export function blocksReducer(state = initialBlocksState, action) {
+    let newState;
     switch(action.type) {
         case Types.ADD_EVENT:
             return [
                 ...state,
-
                 action.payload.block
-            ]
+            ];
+        case Types.EDIT_BLOCK:
+            newState = [...state];
+            for (let block of newState) {
+                if (block.key === action.payload.block.key) {
+                    block = {
+                        ...block,
+                        ...action.payload.block
+                    };
+                }
+            }
+            return newState;
+        case Types.DELETE_BLOCK:
+            newState = [];
+            for (let block of state) {
+                if (block.key !== action.payload.blockID) {
+                    newState.push({...block});
+                }
+            }
+            return newState;
+        case Types.CLEAR_BLOCKS:
+            return [];
         default:
             return state;
     }
