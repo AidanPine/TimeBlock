@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Box, Tabs, Tab } from '@mui/material';
+import { Grid, Box, Tabs, Tab } from '@mui/material';
 import { useSelector, connect } from 'react-redux';
 import { compose } from 'redux';
 import {firestoreConnect, getFirebase} from "react-redux-firebase";
@@ -80,8 +80,9 @@ const Dashboard = (props) => {
                 // pass in function that displays current calendar
             }
 
-            <Grid item xs={12} style={{marginTop: '70px'}} />
-            <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
+            
+            <Grid item xs={12} style={{marginTop: '64px'}} />
+            <Box sx={{ width: '100%', bgcolor: '#220f49', borderTop: '2px solid #ffffff'}}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 
                     <Tab label="Month"  style={{color: '#ffffff'}}  {...tabProps(0)} />

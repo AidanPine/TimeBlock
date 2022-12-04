@@ -6,16 +6,14 @@ import { Link } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import InfoCard from './InfoCard';
-import {ActionCreators, addBlock, signOut} from "../redux_functions/actions";
-import {connect, useDispatch, useSelector} from "react-redux";
-import { myFirebase } from "../firebase_functions/firebase";
+import {signOut} from "../redux_functions/actions";
+import {connect, useSelector} from "react-redux";
 
 
 const Home = (props) => {
     const [openLogin, setOpenLogin] = React.useState(false);
     const [openSignup, setOpenSignup] = React.useState(false);
     const authEmpty = useSelector(state => state.firebase.auth.isEmpty);
-    const dispatch = useDispatch();
 
     const handleOpenLogin = () => {
         setOpenLogin(true);
@@ -85,7 +83,7 @@ const Home = (props) => {
                 </Grid>
                 <Grid item xs={12} style={{height: "40px"}} /> 
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{backgroundColor: '#220f49'}}>
 
                 <Grid item xs={12} stlye={{height: "10px"}} />
 
@@ -102,7 +100,7 @@ const Home = (props) => {
 
                     <Grid item xs={1} sm={1} md={1} lg={2}/>
                     <Grid item xs={11} sm={11} md={11} lg={10} align="left">
-                        <Typography variant="h5" style={{color: "#000000", fontWeight: 'bold'}}>The best way to keep track of your day.</Typography>
+                        <Typography variant="h5" style={{color: "#8C52FF", fontWeight: 'bold'}}>The best way to keep track of your day.</Typography>
                     </Grid>
 
                     <Grid item xs={12} style={{height: "50px"}} />
@@ -118,7 +116,10 @@ const Home = (props) => {
                     <Grid item xs={12} style={{height: "500px"}} />
                 
                 </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={6}></Grid>
+                <Grid item xs={12} sm={12} md={6} lg={6} sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+                    <div sx={{ display: {xs: 'none', sm: 'none', md: 'none', lg: 'block'} }} style={{backgroundColor: '#5731A4', width: '300%', height: '900px', borderRadius: '125% 125%', marginLeft: '10%'}}></div>
+                    <div sx={{ display: {xs: 'none', sm: 'none', md: 'none', lg: 'block'} }} style={{backgroundColor: '#8C25FF', width: '200%', height: '600px', borderRadius: '100% 100%', marginLeft: '30%', marginTop: '-750px'}}></div>
+                </Grid>
                 <Grid item xs={12} container>
                     <Grid item xs={1}/>
                     <Grid item xs={10} container spacing={5}>

@@ -21,12 +21,12 @@ const NavBar = (props) => {
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [calendars, setCalendars] = React.useState([
         {
-            name: props.name + '\'s Personal Calendar',
+            name: 'User\'s Personal Calendar',
             collaborators: [],
             personal: true
         },
         {
-            name: props.name + '\'s Shared Calendar',
+            name: 'User\'s Shared Calendar',
             collaborators: ["collaborator1@gmail.com", "collaborator2@gmail.com", "collaborator3@gmail.com"],
             personal: false
         }
