@@ -12,10 +12,11 @@ import {
 } from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from '@mui/icons-material/Add';
 import {monthOffsets} from "../data_functions/monthOffsets";
 import SquareIcon from "@mui/icons-material/Square";
 import {connect} from "react-redux";
-import {addBlock, deleteBlock, editBlock, signIn} from "../redux_functions/actions";
+import {addBlock, deleteBlock, editBlock} from "../redux_functions/actions";
 
 const randomKey = (length) => {
     const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -525,7 +526,7 @@ const CalendarRow = (props) => {
                 <DayItem day={props.days[props.dayIndex]} blocks={props.blocks} handleEdit={handleEdit} handleDelete={handleDelete} handleCompleted={handleCompleted} updateYPos={updateYPos} monthIndex={props.monthIndex} currYear={props.currYear} />
             </Grid>
             <Grid item xs={2}>
-                <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', width: '150px'}}>Add Block</Button>
+                <Button variant="contained" onClick={handleDialogOpen} style={{marginTop: '290px', textTransform: 'none', backgroundColor: '#8c52ff', color: '#ffffff', borderRadius: '10px'}} endIcon={<AddIcon />}>Add Block</Button>
 
                 {
                     // ADD DIALOG

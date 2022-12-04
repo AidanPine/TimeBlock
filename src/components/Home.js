@@ -48,7 +48,7 @@ const Home = (props) => {
                 <Grid item xs={6} sm={6} md={8} lg={8}>
                     <Button
                         variant="contained"
-                        style={{color: "#8C52FF", backgroundColor: "#ffffff", fontWeight: "bold", textTransform: "none", marginLeft: "10px", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "right"}}
+                        style={{color: "#8C52FF", backgroundColor: "#ffffff", fontWeight: "bold", textTransform: "none", marginLeft: "10px", borderRadius: "10px", paddingLeft: "30px", paddingRight: "30px", float: "right"}}
                         onClick={authEmpty ? handleOpenLogin : handleSignOut}
                         sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
                         { authEmpty ? 'Sign In': 'Sign Out'}
@@ -66,7 +66,7 @@ const Home = (props) => {
                         authEmpty ?
                             <Button
                                 variant="outlined"
-                                style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
+                                style={{color: "#ffffff", backgroundColor: "#8C52FF", marginLeft: "10px", fontWeight: "bold", textTransform: "none", borderRadius: "10px", paddingLeft: "30px", paddingRight: "30px", float: "left"}}
                                 onClick={handleOpenSignup}
                                 sx={{ marginTop: { xs: '20px', sm: '0px', md: '0px', lg: '0px', xl: '0px' } }}>
                                 Sign Up
@@ -110,7 +110,7 @@ const Home = (props) => {
                         {
                             // Go to dashboard
                         }
-                        <Link className="get-started-button" to={"/dashboard"} style={{backgroundColor: "#8C52FF", textDecoration: "none", color: "#ffffff", fontWeight: "500", textTransform: "none", borderRadius: "25px", paddingLeft: "30px", paddingRight: "30px", paddingTop: "10px", paddingBottom: "10px", fontFamily: "Roboto"}}>Get Started</Link>
+                        <Link className="get-started-button" to={"/dashboard"} style={{backgroundColor: "#8C52FF", textDecoration: "none", color: "#ffffff", fontWeight: "500", textTransform: "none", borderRadius: "10px", paddingLeft: "30px", paddingRight: "30px", paddingTop: "10px", paddingBottom: "10px", fontFamily: "Roboto"}}>Get Started</Link>
                     </Grid>
 
                     <Grid item xs={12} style={{height: "500px"}} />

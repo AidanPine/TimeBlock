@@ -110,14 +110,17 @@ const NavBar = (props) => {
     }
 
     const addCalendar = () => {
-        setAddDialogOpen(false);
-        let newCalendar = {
-            name: calendarName,
-            collaborators: values
+        if (calendarName !== "") {
+            setAddDialogOpen(false);
+            let newCalendar = {
+                name: calendarName,
+                collaborators: values,
+                personal: false
+            }
+            let newCalendars = [...calendars];
+            newCalendars.push(newCalendar);
+            setCalendars(newCalendars);
         }
-        let newCalendars = [...calendars];
-        newCalendars.push(newCalendar);
-        setCalendars(newCalendars);
     }
 
     const handleDeleteDialogOpen = () => {
@@ -131,23 +134,25 @@ const NavBar = (props) => {
     }
 
     const editCalendar = () => {
-        let newCalendars = [];
-        for (let i = 0; i < calendars.length; i++) {
-            if (calendars[i].name === editName) {
-                let newCalendar = {
-                    name: calendarName,
-                    collaborators: values,
-                    personal: false
+        if (calendarName !== "") {
+            let newCalendars = [];
+            for (let i = 0; i < calendars.length; i++) {
+                if (calendars[i].name === editName) {
+                    let newCalendar = {
+                        name: calendarName,
+                        collaborators: values,
+                        personal: false
+                    }
+                    newCalendars.unshift(newCalendar);
+                } else {
+                    newCalendars.push(calendars[i]);
                 }
-                newCalendars.unshift(newCalendar);
-            } else {
-                newCalendars.push(calendars[i]);
             }
+            setCalendars(newCalendars);
+            setCalendarName("");
+            setValues([]);
+            setSettingsDialogOpen(false);
         }
-        setCalendars(newCalendars);
-        setCalendarName("");
-        setValues([]);
-        setSettingsDialogOpen(false);
     }
 
     const deleteCalendar = () => {
