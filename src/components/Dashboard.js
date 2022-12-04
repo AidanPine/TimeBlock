@@ -1,11 +1,9 @@
 import React from 'react';
-import { Grid, IconButton, Typography, Box, Tabs, Tab } from '@mui/material';
-import logo from '../assets/tb-icon.png';
-import HomeIcon from '@mui/icons-material/Home';
+import { Grid, Typography, Box, Tabs, Tab } from '@mui/material';
 import { useSelector, connect } from 'react-redux';
 import { compose } from 'redux';
 import {firestoreConnect, getFirebase} from "react-redux-firebase";
-import { useNavigate } from 'react-router-dom';
+import NavBar from './NavBar';
 import { TabPanel, tabProps } from './TabPanel';
 import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
@@ -15,26 +13,9 @@ import getMonthArray from '../data_functions/getMonthArray';
 const Dashboard = (props) => {
 
     const today = new Date().getDate();
-    //console.log(today);
     const currMonth = new Date().getMonth()+1;
-    //console.log(currMonth);
     const thisYear = new Date().getFullYear();
-    //console.log(thisYear);
-    // get current month by getting current month from date function
-    // const months = [
-    //     'January',
-    //     'February',
-    //     'March',
-    //     'April',
-    //     'May',
-    //     'June',
-    //     'July',
-    //     'August',
-    //     'September',
-    //     'October',
-    //     'November',
-    //     'December'
-    // ];
+
     const { monthArray, startWeekIndex, endWeekIndex } = getMonthArray(today, currMonth, thisYear);
 
     const user = {
@@ -44,12 +25,6 @@ const Dashboard = (props) => {
         ...user,
         ...useSelector((state) => state.firebase.profile)
     }
-
-    const navigate = useNavigate();
-
-    const handleClick = () => {
-        navigate("/");
-    };
 
     let dayInd = 0;
     for (let i = 0; i < 42; i++) {
@@ -62,17 +37,11 @@ const Dashboard = (props) => {
     const [tabValue, setTabValue] = React.useState(0);
 
     const [monthIndex, setMonthIndex] = React.useState(currMonth); 
-    const [arrayOfDays, setArrayOfDays] = React.useState(monthArray); // fill array with empty undefined elements
+    const [arrayOfDays, setArrayOfDays] = React.useState(monthArray);
     const [currYear, setCurrYear] = React.useState(thisYear);
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
     const [dayIndex, setDayIndex] = React.useState(dayInd+1);
-
-    // get blocks from firebase, for now we will use empty array and useState()
-
-    //const [blocks, setBlocks] = React.useState(props.blocks);
-
-
 
 
     const handleTabChange = (e, newTabValue) => {
@@ -103,30 +72,10 @@ const Dashboard = (props) => {
         setCurrYear(newYear);
     }
 
-    /*
-    const updateBlocks = (newBlocks) => {
-        setBlocks(newBlocks);
-    }*/
-
     return (
         <div className="App">
-            <Grid container spacing={3} align="right" style={{height: "60px", marginTop: '-20px'}}>
-                <Grid item xs={2} sm={2} md={2} lg={1} align="left">
-                    <img src={logo} alt="logo" style={{width: "30px", marginLeft: "20px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
-                </Grid>
-                <Grid item xs={8} sm={8} md={8} lg={10} align="center">
-                    <Typography variant="h5" color="#ffffff">Dashboard</Typography>
-                </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={1} align="right">
-                    <IconButton aria-label="delete" style={{ cursor: 'pointer', color: "#eeeeee", height: "35px", width: "35px", backgroundColor: "#8C52FF", marginRight: "20px"}} onClick={handleClick} >
-                        {
-                            // Go to home
-                        }
-                        <HomeIcon />
-                    </IconButton>
-                </Grid>
-            </Grid>
-            <Grid item xs={12} style={{marginTop: '10px'}} />
+            <NavBar />
+            <Grid item xs={12} style={{marginTop: '70px'}} />
             <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 
