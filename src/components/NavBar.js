@@ -461,7 +461,7 @@ const NavBar = (props) => {
                     </DialogContent>
                     <DialogActions>
                         <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={handleDeleteDialogClose}>No, Cancel</Button>
-                        <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={deleteCalendar}>Yes, Delete Block</Button>
+                        <Button variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none"}} onClick={deleteCalendar}>Yes, Delete Calendar</Button>
                     </DialogActions>
                 </Dialog>
                 </Toolbar>
