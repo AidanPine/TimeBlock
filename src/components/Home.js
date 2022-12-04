@@ -103,7 +103,7 @@ const Home = (props) => {
                         <Typography variant="h5" style={{color: "#8C52FF", fontWeight: 'bold'}}>The best way to keep track of your day.</Typography>
                     </Grid>
 
-                    <Grid item xs={12} style={{height: "50px"}} />
+                    <Grid item xs={12} style={{height: "40px"}} />
 
                     <Grid item xs={1} sm={1} md={1} lg={2} />
                     <Grid item xs={11} sm={11} md={11} lg={10} align="left">
