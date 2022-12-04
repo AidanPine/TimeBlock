@@ -74,7 +74,12 @@ const Dashboard = (props) => {
 
     return (
         <div className="App">
-            <NavBar />
+            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={[]} setCurrentCalendar={null} />
+            {
+                // pass in array of calendars loaded from user's profile
+                // pass in function that displays current calendar
+            }
+
             <Grid item xs={12} style={{marginTop: '70px'}} />
             <Box sx={{ width: '100%', bgcolor: '#220f49' }}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
@@ -82,7 +87,7 @@ const Dashboard = (props) => {
                     <Tab label="Month"  style={{color: '#ffffff'}}  {...tabProps(0)} />
                     <Tab label="Week"  style={{color: '#ffffff'}}  {...tabProps(1)} />
                     <Tab label="Day"  style={{color: '#ffffff'}}  {...tabProps(2)} />
-                    <Tab label="State Data"  style={{color: '#ffffff'}}  {...tabProps(3)} />
+                    {/* <Tab label="State Data"  style={{color: '#ffffff'}}  {...tabProps(3)} /> */}
 
                 </Tabs>
 
@@ -115,7 +120,7 @@ const Dashboard = (props) => {
                 {
                     // TAB PANEL FOR STATE DATA
                 }
-                <TabPanel value={tabValue} index={3}>
+                {/* <TabPanel value={tabValue} index={3}>
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         First Name: {profile.firstName}
                     </Typography>
@@ -128,7 +133,7 @@ const Dashboard = (props) => {
                     <Typography variant={'h5'} style={{color: '#ffffff'}}>
                         Email: {profile.email}
                     </Typography>
-                </TabPanel>
+                </TabPanel> */}
 
             </Box>
             

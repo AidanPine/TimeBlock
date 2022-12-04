@@ -7,10 +7,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
+import HomeIcon from '@mui/icons-material/Home';
 
 
+const NavBar = (props) => {
+    const dashboardTitle = props.name + '\'s Dashboard';
 
-const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [anchorElCalendar, setAnchorElCalendar] = React.useState(null);
@@ -19,9 +21,14 @@ const NavBar = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [calendars, setCalendars] = React.useState([
         {
-            name: 'User\'s Personal Calendar',
-            collaborators: ["collab1@gmail.com", "collab2@gmail.com", "collab3@gmail.com"],
+            name: props.name + '\'s Personal Calendar',
+            collaborators: [],
             personal: true
+        },
+        {
+            name: props.name + '\'s Shared Calendar',
+            collaborators: ["collaborator1@gmail.com", "collaborator2@gmail.com", "collaborator3@gmail.com"],
+            personal: false
         }
     ]);
 
@@ -196,7 +203,9 @@ const NavBar = () => {
         <>
             <AppBar position="fixed" style={{backgroundColor: 'transparent', boxShadow: 'inset 0 0 2000px rgba(255, 255, 255, .1)'}}>
                 <Toolbar disableGutters>
-                    <img src={logo} alt="logo" style={{width: "30px", marginLeft: "15px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
+                    <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
+                        <img src={logo} alt="logo" style={{width: "30px", marginLeft: "15px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
+                    </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                         size="large"
@@ -227,21 +236,23 @@ const NavBar = () => {
                         }}
                         >
                         
-                        <MenuItem onClick={handleCloseNavMenu}>
-                            <Typography textAlign="center" style={{color: '#ffffff'}}>Dashboard</Typography>
+                        <MenuItem>
+                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold'}} endIcon={<KeyboardArrowDownIcon />}>{calendars[0].name}</Button>
                         </MenuItem>
-                        <MenuItem onClick={handleClick}>
-                            <Typography textAlign="center" style={{color: '#ffffff'}}>Home</Typography>
+                        <MenuItem>
+                            <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
+                        </MenuItem>
+                        <MenuItem>
+                            <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<AddIcon />}>Add Calendar</Button>
                         </MenuItem>
                         
                         </Menu>
                     </Box>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginLeft: '50px' }}>
-                        <Button style={{color: '#ffffff', textTransform: 'none', textDecoration: 'underline'}}>Dashboard</Button>
-                        <Button style={{color: '#ffffff', textTransform: 'none'}} onClick={handleClick}>Home</Button>
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="h5" style={{color: '#ffffff'}}>{dashboardTitle}</Typography>
                     </Box>
 
-                    <Box sx={{ flexGrow: 0, float: 'right' }}>
+                    <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
                         <Tooltip title="Calendar Selection">
                             <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold'}} endIcon={<KeyboardArrowDownIcon />}>{calendars[0].name}</Button>
                         </Tooltip>
@@ -249,7 +260,12 @@ const NavBar = () => {
                             <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
                         </Tooltip>
                         <Tooltip title="Add A Calendar">
-                        <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px', marginRight: '15px'}} endIcon={<AddIcon />}>Add Calendar</Button>
+                            <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<AddIcon />}>Add Calendar</Button>
+                        </Tooltip>
+                        <Tooltip title="Go To Home Page">
+                            <IconButton onClick={handleClick} style={{backgroundColor: '#8C52FF', color: '#ffffff', textTransform: 'none', borderRadius: '20px', marginLeft: '5px', marginRight: '10px'}}>
+                                <HomeIcon style={{color: '#ffffff'}} />
+                            </IconButton>
                         </Tooltip>
                         <Menu
                         sx={{ mt: '45px' }}
@@ -384,41 +400,43 @@ const NavBar = () => {
                                     />
                                 </Grid>
                             </Grid>
-                            <DialogContentText style={{marginTop: '20px'}}>
-                                Invite Collaborators Via Email Address
-                            </DialogContentText>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <FormControl>
-                                        <Grid container>
-                                            <Grid item xs={12}>
-                                                <div className={"container"}>
-                                                    {values.map((item,index) => (
-                                                        <Chip  size="small" onDelete={()=>handleDelete(item,index)} label={item}/>
-                                                        ))}
-                                                </div>
+                            { !calendars[0].personal ? 
+                                [<DialogContentText style={{marginTop: '20px'}}>
+                                    Invite Collaborators Via Email Address
+                                </DialogContentText>,
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <FormControl>
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <div className={"container"}>
+                                                        {values.map((item,index) => (
+                                                            <Chip  size="small" onDelete={()=>handleDelete(item,index)} label={item}/>
+                                                            ))}
+                                                    </div>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        autoFocus
+                                                        margin="dense"
+                                                        id="email"
+                                                        label="Email Address"
+                                                        type="text"
+                                                        fullWidth
+                                                        variant="standard"
+                                                        value={currValue}
+                                                        onChange={handleChange}
+                                                        style={{color: "#000000"}}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Button onClick={handleAdd} variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none", marginTop: '10px'}} >Add Email</Button>
+                                                </Grid>
                                             </Grid>
-                                            <Grid item xs={12}>
-                                                <TextField
-                                                    autoFocus
-                                                    margin="dense"
-                                                    id="email"
-                                                    label="Email Address"
-                                                    type="text"
-                                                    fullWidth
-                                                    variant="standard"
-                                                    value={currValue}
-                                                    onChange={handleChange}
-                                                    style={{color: "#000000"}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Button onClick={handleAdd} variant="contained" style={{backgroundColor: "#8C52FF", textTransform: "none", marginTop: '10px'}} >Add Email</Button>
-                                            </Grid>
-                                        </Grid>
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>]
+                            : <></>}
                         </DialogContent>
                         <DialogActions>
                             <Button style={{color: "#8C52FF", textTransform: "none"}} onClick={handleSettingsDialogClose}>Cancel</Button>
