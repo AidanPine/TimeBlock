@@ -201,7 +201,7 @@ const NavBar = (props) => {
 
     return (
         <>
-            <AppBar position="fixed" style={{backgroundColor: 'transparent', boxShadow: 'inset 0 0 2000px rgba(255, 255, 255, .1)'}}>
+            <AppBar position="fixed" style={{backgroundColor: 'transparent', boxShadow: 'none'}}>
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
                         <img src={logo} alt="logo" style={{width: "40px", marginLeft: "8px", border: '2px solid #8C52FF', borderRadius: '10px'}} />
