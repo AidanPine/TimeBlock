@@ -38,7 +38,7 @@ const Home = (props) => {
 
     return (
         <div className="App">
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{backgroundColor: '#000000'}}>
 
                 <Grid item xs={12} style={{height: "40px"}} /> 
 
@@ -82,6 +82,9 @@ const Home = (props) => {
                     </Dialog>
 
                 </Grid>
+                <Grid item xs={12} style={{height: "40px"}} /> 
+            </Grid>
+            <Grid container spacing={3}>
 
                 <Grid item xs={12} stlye={{height: "10px"}} />
 
