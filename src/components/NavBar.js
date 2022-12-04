@@ -204,7 +204,7 @@ const NavBar = (props) => {
             <AppBar position="fixed" style={{backgroundColor: 'transparent', boxShadow: 'inset 0 0 2000px rgba(255, 255, 255, .1)'}}>
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
-                        <img src={logo} alt="logo" style={{width: "30px", marginLeft: "15px", boxShadow: "0px 0px 12px 10px rgba(0,0,0,0.97)"}} />
+                        <img src={logo} alt="logo" style={{width: "40px", marginLeft: "8px", border: '2px solid #8C52FF', borderRadius: '10px'}} />
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
@@ -245,25 +245,29 @@ const NavBar = (props) => {
                         <MenuItem>
                             <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<AddIcon />}>Add Calendar</Button>
                         </MenuItem>
+                        <MenuItem>
+                            <Button onClick={handleClick} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<HomeIcon />}>Home</Button>
+                        </MenuItem>
                         
                         </Menu>
                     </Box>
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" style={{color: '#ffffff'}}>{dashboardTitle}</Typography>
+                    <Box sx={{ flexGrow: 1, display: 'flex', backgroundColor: '#8C52FF', height: '42px', borderRadius: '10px', marginLeft: '5px', marginRight: '7px'}}>
+                        <Typography variant="h5" style={{color: '#ffffff', marginLeft: '15px', marginTop: '5px'}}>{dashboardTitle}</Typography>
                     </Box>
+                    <Box sx={{ flexGrow: 0 }}></Box>
 
                     <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
                         <Tooltip title="Calendar Selection">
-                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold'}} endIcon={<KeyboardArrowDownIcon />}>{calendars[0].name}</Button>
+                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<KeyboardArrowDownIcon />}>{calendars[0].name}</Button>
                         </Tooltip>
                         <Tooltip title="Calendar Settings">
-                            <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
+                            <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
                         </Tooltip>
                         <Tooltip title="Add A Calendar">
-                            <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<AddIcon />}>Add Calendar</Button>
+                            <Button onClick={handleAddDialogOpen} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<AddIcon />}>Add Calendar</Button>
                         </Tooltip>
                         <Tooltip title="Go To Home Page">
-                            <IconButton onClick={handleClick} style={{backgroundColor: '#8C52FF', color: '#ffffff', textTransform: 'none', borderRadius: '20px', marginLeft: '5px', marginRight: '10px'}}>
+                            <IconButton onClick={handleClick} style={{backgroundColor: '#8C52FF', color: '#ffffff', textTransform: 'none', marginLeft: '5px', marginRight: '8px', border: '2px solid #8C52FF', borderRadius: '10px'}}>
                                 <HomeIcon style={{color: '#ffffff'}} />
                             </IconButton>
                         </Tooltip>
