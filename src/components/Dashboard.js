@@ -82,7 +82,7 @@ const Dashboard = (props) => {
 
             
             <Grid item xs={12} style={{marginTop: '64px'}} />
-            <Box sx={{ width: '100%', bgcolor: '#220f49', borderTop: '2px solid #ffffff'}}>
+            <Box sx={{ width: '100%', bgcolor: '#220f49', borderTop: '2px solid #8C25FF'}}>
                 <Tabs value={tabValue} onChange={handleTabChange} >
 
                     <Tab label="Month"  style={{color: '#ffffff'}}  {...tabProps(0)} />
