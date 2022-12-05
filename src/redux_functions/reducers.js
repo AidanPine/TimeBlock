@@ -71,13 +71,13 @@ export function blocksReducer(state = initialBlocksState, action) {
                 action.payload.block
             ];
         case Types.EDIT_BLOCK:
-            newState = [...state];
-            for (let block of newState) {
-                if (block.key === action.payload.block.key) {
-                    block = {
-                        ...block,
-                        ...action.payload.block
-                    };
+            newState = [];
+            for (let block of state) {
+                if (block.key !== action.payload.block.key) {
+                    newState.push({...block});
+                }
+                else {
+                    newState.push({...action.payload.block})
                 }
             }
             return newState;

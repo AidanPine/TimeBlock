@@ -81,11 +81,11 @@ const Block = (props) => {
         //console.log(yPos + ui.deltaY);
         setZIndex(1000);
         setYPos(yPos + ui.deltaY);
-        props.updateYPos(getBlock(), yPos);
     }
 
     const handleStop = () => {
         setZIndex(1);
+        props.updateYPos(getBlock(), yPos);
     }
 
     const handleDialogOpen = () => {

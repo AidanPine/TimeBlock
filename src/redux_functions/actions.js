@@ -147,7 +147,6 @@ export const editBlock = (block) => {
                 ...block,
             })
         );
-        console.log(getState());
     }
 }
 
