@@ -74,7 +74,7 @@ const Dashboard = (props) => {
 
     return (
         <div className="App">
-            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={[]} setCurrentCalendar={null} />
+            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={props.calendars} setCurrentCalendar={null} />
             {
                 // pass in array of calendars loaded from user's profile
                 // pass in function that displays current calendar
@@ -143,13 +143,14 @@ const Dashboard = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    if (state.firestore.ordered.blocks) {
+    if (!state.firebase.auth.isEmpty && state.firestore.ordered.blocks) {
         state.blocks = state.firestore.ordered.blocks;
     }
     console.log(state);
     return {
         blocks: state.blocks,
-        auth: state.firebase.auth
+        auth: state.firebase.auth,
+        calendars: state.firestore.ordered.calendars
     }
 }
 
@@ -163,6 +164,14 @@ export default compose(
                     {collection: 'blocks'}
                 ],
                 storeAs: 'blocks'
+            },
+            {
+                collection: 'users',
+                doc: getFirebase().auth().currentUser ? getFirebase().auth().currentUser.uid : 'kSwQeeRaTzkMfdgsNR0v',
+                subcollections: [
+                    {collection: 'calendars'}
+                ],
+                storeAs: 'calendars'
             }
         ];
     }),
