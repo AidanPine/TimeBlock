@@ -42,6 +42,16 @@ const Dashboard = (props) => {
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
     const [dayIndex, setDayIndex] = React.useState(dayInd+1);
+    const [calendars, setCalendars] = React.useState(
+    [
+        {
+            name: 'Test Calendar',
+            personal: true,
+            collaborators: [],
+            blocks: []
+        }
+    ]);
+    // plug in props.calendars from firebase
 
 
     const handleTabChange = (e, newTabValue) => {
@@ -72,14 +82,18 @@ const Dashboard = (props) => {
         setCurrYear(newYear);
     }
 
+    const updateCalendars = (newCalendars) => {
+        setCalendars(newCalendars);
+        // update calendars here
+    }
+
     return (
         <div className="App">
-            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={props.calendars} setCurrentCalendar={null} />
+            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={calendars} setCalendars={updateCalendars} />
             {
                 // pass in array of calendars loaded from user's profile
                 // pass in function that displays current calendar
             }
-
             
             <Grid item xs={12} style={{marginTop: '64px'}} />
             <Box sx={{ width: '100%', bgcolor: '#220f49', borderTop: '2px solid #8C25FF'}}>
