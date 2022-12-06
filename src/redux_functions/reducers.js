@@ -3,28 +3,6 @@ import { combineReducers } from "redux";
 import { firestoreReducer } from 'redux-firestore';
 import { firebaseReducer } from 'react-redux-firebase';
 
-/*
-store design:
-{
-	profile: {
-	...
-	},
-	blocks: [
-		{
-			name:
-			date:
-			desc:
-			length:
-			startTime:
-			...
-		},
-	]
-}
- */
-
-
-// let blockID = 0;
-
 const initialAuthState = {
     authError: null,
 };

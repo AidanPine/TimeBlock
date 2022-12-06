@@ -9,6 +9,8 @@ import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
 import DayCalendar from './DayCalendar';
 import getMonthArray from '../data_functions/getMonthArray';
+import flags from "../data_functions/globals";
+import {getFirestore} from "redux-firestore";
 
 const Dashboard = (props) => {
 
@@ -42,16 +44,8 @@ const Dashboard = (props) => {
     const [weekStartIndex, setWeekStartIndex] = React.useState(startWeekIndex);
     const [weekEndIndex, setWeekEndIndex] = React.useState(endWeekIndex);
     const [dayIndex, setDayIndex] = React.useState(dayInd+1);
-    const [calendars, setCalendars] = React.useState(
-    [
-        {
-            name: 'Test Calendar',
-            personal: true,
-            collaborators: [],
-            blocks: []
-        }
-    ]);
-    // plug in props.calendars from firebase
+
+    const [blockFlag, setBlockFlag] = React.useState(0);
 
 
     const handleTabChange = (e, newTabValue) => {
@@ -82,14 +76,10 @@ const Dashboard = (props) => {
         setCurrYear(newYear);
     }
 
-    const updateCalendars = (newCalendars) => {
-        setCalendars(newCalendars);
-        // update calendars here
-    }
-
     return (
         <div className="App">
-            <NavBar name={typeof profile.firstName === 'undefined' ? "User" : profile.firstName} calendars={calendars} setCalendars={updateCalendars} />
+            <NavBar name={props.auth.isEmpty ? "User" : profile.firstName} calendars={props.auth.isEmpty ? []:props.calendars}
+                    auth={props.auth} />
             {
                 // pass in array of calendars loaded from user's profile
                 // pass in function that displays current calendar
@@ -157,8 +147,10 @@ const Dashboard = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    if (!state.firebase.auth.isEmpty && state.firestore.ordered.blocks) {
-        state.blocks = state.firestore.ordered.blocks;
+    if (!state.firebase.auth.isEmpty) {
+        if (flags.personalBlockFlag && state.firestore.ordered.blocks) {
+            state.blocks = state.firestore.ordered.blocks;
+        }
     }
     console.log(state);
     return {
@@ -186,7 +178,7 @@ export default compose(
                     {collection: 'calendars'}
                 ],
                 storeAs: 'calendars'
-            }
+            },
         ];
     }),
     connect(mapStateToProps)

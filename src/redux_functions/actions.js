@@ -1,5 +1,6 @@
 import { Types } from './actionTypes';
 import { actionTypes } from "redux-firestore";
+import flags from "../data_functions/globals";
 
 const randomKey = (keyLength) => {
     const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -122,7 +123,15 @@ export const addBlock = (newBlock) => {
 
         const user =  firebase.auth().currentUser;
         if (user) {
-            firestore.collection('users').doc(user.uid).collection('blocks').doc(newBlock.key).set(newBlock);
+            if (flags.personalBlockFlag) {
+                console.log(newBlock);
+                firestore.collection('users').doc(user.uid).collection('blocks').doc(newBlock.key).set(newBlock);
+            }
+            else {
+                firestore.collection('users').doc(user.uid).get().then((doc) => {
+                    firestore.collection('team-calendars').doc(doc.data().calendar).collection('blocks').doc(newBlock.key).set(newBlock);
+                })
+            }
         }
         dispatch(ActionCreators.addEvent({
                 ...newBlock,
@@ -139,9 +148,16 @@ export const editBlock = (block) => {
 
         const user = firebase.auth().currentUser;
         if (user) {
-            firestore.collection('users').doc(user.uid).collection('blocks').doc(block.key).set({
-                ...block,
-            })
+            if (flags.personalBlockFlag) {
+                firestore.collection('users').doc(user.uid).collection('blocks').doc(block.key).set({
+                    ...block,
+                })
+            }
+            else {
+                firestore.collection('users').doc(user.uid).get().then((doc) => {
+                    firestore.collection('team-calendars').doc(doc.data().calendar).collection('blocks').doc(block.key).set(block);
+                })
+            }
         }
         dispatch(ActionCreators.editBlock({
                 ...block,
@@ -157,8 +173,93 @@ export const deleteBlock = (blockID) => {
 
         const user = firebase.auth().currentUser;
         if (user) {
-            firestore.collection('users').doc(user.uid).collection('blocks').doc(blockID).delete();
+            if (flags.personalBlockFlag) {
+                firestore.collection('users').doc(user.uid).collection('blocks').doc(blockID).delete();
+            }
+            else {
+                firestore.collection('users').doc(user.uid).get().then((doc) => {
+                    firestore.collection('team-calendars').doc(doc.data().calendar).collection('blocks').doc(blockID).delete();
+                })
+            }
         }
         dispatch(ActionCreators.deleteBlock(blockID));
+    }
+}
+
+export const addCalendar = (calendar) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('calendars').add(calendar).then((docRef) => {
+                firestore.collection('team-calendars').doc(docRef.id).set(calendar);
+                firestore.collection('team-calendars').doc(docRef.id).collection('users').doc(user.uid).set({name: 'user'});
+            });
+        }
+    }
+}
+
+export const editCalendar = (calendar) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('calendars').doc(calendar.id).set(calendar).then(() => {
+                firestore.collection('team-calendars').doc(calendar.id).set(calendar);
+            });
+        }
+    }
+}
+
+export const deleteCalendar = (calendarID) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+        if (user) {
+            firestore.collection('users').doc(user.uid).collection('calendars').doc(calendarID).delete().then(() => {
+               firestore.collection('team-calendars').doc(calendarID).delete();
+            });
+        }
+    }
+}
+
+export const changeCalendar = (calendarID) => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+        if (user) {
+            flags.personalBlockFlag = calendarID ? 0 : 1;
+            dispatch(ActionCreators.clearBlocks());
+            firestore.collection('users').doc(user.uid).get().then((doc) => {
+                firestore.collection('users').doc(user.uid).set({
+                    ...doc.data(),
+                    calendar: calendarID,
+                })
+            })
+
+            let blocks = [];
+            if (calendarID) {
+                firestore.collection('team-calendars').doc(calendarID).collection('blocks').get().then( (col) => {
+                    blocks = col.docs.map(doc => doc.data());
+                    for (let block of blocks) {
+                        dispatch(ActionCreators.addEvent(block));
+                    }
+                    console.log(getState().blocks);
+                });
+            }
+            else {
+                firestore.collection('users').doc(user.uid).collection('blocks').get().then( (col) => {
+                     blocks = col.docs.map(doc => doc.data());
+                    for (let block of blocks) {
+                        dispatch(ActionCreators.addEvent(block));
+                    }
+                    console.log(getState().blocks);
+                });
+            }
+        }
     }
 }

@@ -8,10 +8,16 @@ import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import HomeIcon from '@mui/icons-material/Home';
+import {connect} from "react-redux";
+import {addCalendar, changeCalendar, deleteCalendar, editCalendar} from "../redux_functions/actions";
 
 
 const NavBar = (props) => {
-    //console.log(props);
+    let personalCalendar = {
+        id: 0,
+        name: props.name + '\'s Personal Calendar',
+        personal: true
+    }
     const dashboardTitle = props.name + '\'s Dashboard';
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -22,10 +28,21 @@ const NavBar = (props) => {
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
     const [calendarName, setCalendarName] = React.useState("");
-    const [editName, setEditName] = React.useState("");
-    const [deleteName, setDeleteName] = React.useState("");
+    const [currentCalendar, setCurrentCalendar] = React.useState(personalCalendar);
+    // const [editID, setEditID] = React.useState("");
+    // const [deleteID, setDeleteID] = React.useState("");
+    const [activeID, setActiveID] = React.useState(0);
     const [values, setValues] = React.useState([]);
     const [currValue, setCurrValue] = React.useState("");
+
+
+    let displayCalendars = [personalCalendar];
+
+    if (!props.auth.isEmpty && props.calendars) {
+        for (let calendar of props.calendars) {
+            displayCalendars.push({...calendar});
+        }
+    }
 
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
@@ -49,22 +66,21 @@ const NavBar = (props) => {
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = (name) => {
+    const handleCloseUserMenu = (id) => {
         setAnchorElUser(null);
-        let newCalendars = [];
-        for (let i = 0; i < props.calendars.length; i++) {
-            if (props.calendars[i].name === name) {
-                newCalendars.unshift(props.calendars[i]);
-            } else {
-                newCalendars.push(props.calendars[i]);
+        for (let i = 0; i < displayCalendars.length; i++) {
+            if (displayCalendars[i].id === id) {
+                setCurrentCalendar(displayCalendars[i]);
             }
         }
-        props.setCalendars(newCalendars);
+        if (id !== currentCalendar.id) {
+            props.changeCalendar(id);
+        }
     };
 
     const handleClick = () => {
         navigate("/");
-    };  
+    };
 
     const handleChange = (e) => {
         setCurrValue(e.target.value);
@@ -77,7 +93,7 @@ const NavBar = (props) => {
         setCurrValue("");
     }
 
-    const handleDelete = ( item, index) =>{
+    const handleDelete = (item, index) =>{
         let arr = [...values]
         arr.splice(index,1)
         console.log(item)
@@ -106,15 +122,13 @@ const NavBar = (props) => {
                 collaborators: values,
                 personal: false
             }
-            let newCalendars = [...props.calendars];
-            newCalendars.push(newCalendar);
-            props.setCalendars(newCalendars);
+            props.addCalendar(newCalendar);
         }
     }
 
     const handleDeleteDialogOpen = () => {
         setDeleteDialogOpen(true);
-        setDeleteName(props.calendars === [] ? "" : props.calendars[0].name);
+        setActiveID(displayCalendars === [] ? 0 : currentCalendar.id);
         handleCloseSettingsMenu(false);
     }
 
@@ -124,20 +138,12 @@ const NavBar = (props) => {
 
     const editCalendar = () => {
         if (calendarName !== "") {
-            let newCalendars = [];
-            for (let i = 0; i < props.calendars.length; i++) {
-                if (props.calendars[i].name === editName) {
-                    let newCalendar = {
-                        name: calendarName,
-                        collaborators: values,
-                        personal: false
-                    }
-                    newCalendars.unshift(newCalendar);
-                } else {
-                    newCalendars.push(props.calendars[i]);
-                }
-            }
-            props.setCalendars(newCalendars);
+            props.editCalendar({
+                id: activeID,
+                name: calendarName,
+                collaborators: values,
+                personal: false
+            });
             setCalendarName("");
             setValues([]);
             setSettingsDialogOpen(false);
@@ -145,23 +151,19 @@ const NavBar = (props) => {
     }
 
     const deleteCalendar = () => {
-        let newCalendars = [];
-        for (let i = 0; i < props.calendars.length; i++) {
-            if (props.calendars[i].name !== deleteName) {
-                newCalendars.push(props.calendars[i]);
-            }
-        }
-        props.setCalendars(newCalendars);
+
+        props.deleteCalendar(activeID);
         setCalendarName("");
+        setCurrentCalendar(personalCalendar);
         setValues([]);
         setDeleteDialogOpen(false);
     }
 
     const handleSettingsDialogOpen = () => {
         handleCloseSettingsMenu(false);
-        setCalendarName(props.calendars === [] ? "" : props.calendars[0].name);
-        setValues(props.calendars === [] ? [] : props.calendars[0].collaborators);
-        setEditName(props.calendars === [] ? "" : props.calendars[0].name);
+        setCalendarName(displayCalendars === [] ? "" : currentCalendar.name);
+        setValues(displayCalendars === [] ? [] : currentCalendar.collaborators);
+        setActiveID(displayCalendars === [] ? 0 : currentCalendar.id);
         setSettingsDialogOpen(true);
     }
 
@@ -193,7 +195,7 @@ const NavBar = (props) => {
         </React.Fragment>
       );
 
-    //console.log(props.calendars);
+    //console.log(displayCalendars);
     return (
         <>
             <AppBar position="fixed" style={{backgroundColor: 'transparent', boxShadow: 'none'}}>
@@ -230,9 +232,9 @@ const NavBar = (props) => {
                             display: { xs: 'block', md: 'none' },
                         }}
                         >
-                        
+
                         <MenuItem>
-                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold'}} endIcon={<KeyboardArrowDownIcon />}>{typeof props.calendars === 'undefined' || props.calendars === [] ? "" : props.calendars[0].name}</Button>
+                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold'}} endIcon={<KeyboardArrowDownIcon />}>{typeof displayCalendars === 'undefined' || displayCalendars === [] ? "" : currentCalendar.name}</Button>
                         </MenuItem>
                         <MenuItem>
                             <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
@@ -243,7 +245,7 @@ const NavBar = (props) => {
                         <MenuItem>
                             <Button onClick={handleClick} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px'}} endIcon={<HomeIcon />}>Home</Button>
                         </MenuItem>
-                        
+
                         </Menu>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: 'flex', backgroundColor: '#8C52FF', height: '42px', borderRadius: '10px', marginLeft: '5px', marginRight: '7px'}}>
@@ -253,7 +255,7 @@ const NavBar = (props) => {
 
                     <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex'} }}>
                         <Tooltip title="Calendar Selection">
-                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<KeyboardArrowDownIcon />}>{typeof props.calendars === 'undefined' || props.calendars === [] ? "" : props.calendars[0].name}</Button>
+                            <Button onClick={handleOpenUserMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<KeyboardArrowDownIcon />}>{typeof displayCalendars === 'undefined' || displayCalendars === [] ? "" : currentCalendar.name}</Button>
                         </Tooltip>
                         <Tooltip title="Calendar Settings">
                             <Button onClick={handleOpenSettingsMenu} style={{backgroundColor: '#ffffff', color: '#8C52FF', textTransform: 'none', fontWeight: 'bold', marginLeft: '5px', border: '2px solid #8C52FF', borderRadius: '10px'}} endIcon={<SettingsIcon />}>Calendar Settings</Button>
@@ -282,11 +284,19 @@ const NavBar = (props) => {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                         >
-                        {props.calendars.map((cal) => (
-                            <MenuItem key={cal} onClick={() => handleCloseUserMenu(cal.name)}>
-                                <ListItemText textAlign="left" style={{marginRight: '10px'}}>{cal.name}</ListItemText>
-                            </MenuItem>
-                        ))}
+                        <MenuItem key={currentCalendar} onClick={() => handleCloseUserMenu(currentCalendar.id)}>
+                            <ListItemText textAlign="left" style={{marginRight: '10px'}}>{currentCalendar.name}</ListItemText>
+                        </MenuItem>
+                        {
+                            displayCalendars.map((cal) => {
+                                if (cal.id !== currentCalendar.id) {
+                                    return (<MenuItem key={cal} onClick={() => handleCloseUserMenu(cal.id)}>
+                                        <ListItemText textAlign="left"
+                                                      style={{marginRight: '10px'}}>{cal.name}</ListItemText>
+                                    </MenuItem>)
+                                }
+                            })
+                        }
                         </Menu>
                         <Menu
                         sx={{ mt: '45px' }}
@@ -307,7 +317,7 @@ const NavBar = (props) => {
                         <MenuItem onClick={handleSettingsDialogOpen}>
                             <ListItemText textAlign="left" style={{marginRight: '10px'}}>Settings</ListItemText>
                         </MenuItem>
-                        <MenuItem onClick={!props.calendars[0].personal ? handleDeleteDialogOpen : handleOpenSnackbar}>
+                        <MenuItem onClick={!currentCalendar.personal ? handleDeleteDialogOpen : handleOpenSnackbar}>
                             <ListItemText textAlign="left" style={{marginRight: '10px'}}>Delete Calendar</ListItemText>
                         </MenuItem>
                         </Menu>
@@ -399,7 +409,7 @@ const NavBar = (props) => {
                                     />
                                 </Grid>
                             </Grid>
-                            { !props.calendars[0].personal ? 
+                            { !currentCalendar.personal ?
                                 [<DialogContentText style={{marginTop: '20px'}}>
                                     Invite Collaborators Via Email Address
                                 </DialogContentText>,
@@ -467,4 +477,16 @@ const NavBar = (props) => {
     );
 }
 
-export default NavBar;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addCalendar: (calendar) => dispatch(addCalendar(calendar)),
+
+        editCalendar: (calendar) => dispatch(editCalendar(calendar)),
+
+        deleteCalendar: (calendarID) => dispatch(deleteCalendar(calendarID)),
+
+        changeCalendar: (calendarID) => dispatch(changeCalendar(calendarID))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(NavBar);
