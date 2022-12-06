@@ -155,6 +155,7 @@ const NavBar = (props) => {
         props.deleteCalendar(activeID);
         setCalendarName("");
         setCurrentCalendar(personalCalendar);
+        props.changeCalendar(personalCalendar.id);
         setValues([]);
         setDeleteDialogOpen(false);
     }
