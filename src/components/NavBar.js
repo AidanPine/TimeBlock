@@ -40,7 +40,7 @@ const randomKey = (length) => {
 const NavBar = (props) => {
     let personalCalendar = {
         id: 0,
-        name: props.name + '\'s Personal Calendar',
+        name: 'Personal Calendar',
         personal: true
     }
     const dashboardTitle = props.name + '\'s Dashboard';
