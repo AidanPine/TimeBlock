@@ -1,32 +1,7 @@
 import { Types } from './actionTypes';
 import { actionTypes } from "redux-firestore";
 import flags from "../data_functions/globals";
-
-const randomKey = (keyLength) => {
-    const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-    const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-    const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    let key = "";
-
-    while (key.length < keyLength) {
-        let choice = Math.floor(Math.random() * 3);
-        switch(choice) {
-            case 0:
-                key += lower[Math.floor(Math.random() * 26)];
-                break;
-            case 1:
-                key += upper[Math.floor(Math.random() * 26)];
-                break;
-            case 2:
-                key += nums[Math.floor(Math.random() * 10)];
-                break;
-            default:
-                break;
-        }
-    }
-
-    return key;
-}
+import { Action } from '@remix-run/router';
 
 export const ActionCreators = {
 
@@ -243,17 +218,50 @@ export const changeCalendar = (calendarID) => {
 
             let blocks = [];
             if (calendarID) {
-                firestore.collection('team-calendars').doc(calendarID).collection('blocks').get().then( (col) => {
-                    blocks = col.docs.map(doc => doc.data());
-                    for (let block of blocks) {
-                        dispatch(ActionCreators.addEvent(block));
-                    }
-                    console.log(getState().blocks);
-                });
+                if (calendarID === 'merged') {
+
+                    // get combination of blocks from all calendars and combine with personal calendar
+                    // then turn personal calendar blocks grey
+                    // in block component, if color is grey then you cant edit (always unchecked, never striked-through, no dragging, editing, deleting, etc)
+
+                    firestore.collection('users').doc(user.uid).collection('blocks').get().then((col) => {
+                        blocks = col.docs.map(doc => doc.data());
+                        for (let block of blocks) {
+                            block.color = 'grey';
+                            block.name = "Anonymous Event";  // replace with display name (Evan's Event)
+                            block.completed = false;
+                            dispatch(ActionCreators.addEvent(block));
+                        }
+                        //console.log('Users blocks: ' + getState().blocks);
+                    });
+
+                    firestore.collection('team-calendars').get().then((querySnapshots) => {
+                        let calBlocks = []
+                        querySnapshots.forEach(doc => {
+                            if (doc.data().id !== undefined) {
+                                const calID = doc.data().id;
+                                firestore.collection('team-calendars').doc(calID).collection('blocks').get().then((col) => {
+                                    calBlocks = col.docs.map(doc => doc.data());
+                                    for (let block of calBlocks) {
+                                        dispatch(ActionCreators.addEvent(block));
+                                    }
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    firestore.collection('team-calendars').doc(calendarID).collection('blocks').get().then( (col) => {
+                        blocks = col.docs.map(doc => doc.data());
+                        for (let block of blocks) {
+                            dispatch(ActionCreators.addEvent(block));
+                        }
+                        console.log(getState().blocks);
+                    });
+                }
             }
             else {
                 firestore.collection('users').doc(user.uid).collection('blocks').get().then( (col) => {
-                     blocks = col.docs.map(doc => doc.data());
+                    blocks = col.docs.map(doc => doc.data());
                     for (let block of blocks) {
                         dispatch(ActionCreators.addEvent(block));
                     }

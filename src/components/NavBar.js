@@ -11,6 +11,31 @@ import HomeIcon from '@mui/icons-material/Home';
 import {connect} from "react-redux";
 import {addCalendar, changeCalendar, deleteCalendar, editCalendar} from "../redux_functions/actions";
 
+const randomKey = (length) => {
+    const lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+    const upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let key = "";
+
+    while (key.length < length) {
+        let choice = Math.floor(Math.random() * 3);
+        switch(choice) {
+            case 0:
+                key += lower[Math.floor(Math.random() * 26)];
+                break;
+            case 1:
+                key += upper[Math.floor(Math.random() * 26)];
+                break;
+            case 2:
+                key += nums[Math.floor(Math.random() * 10)];
+                break;
+            default:
+                break;
+        }
+    }
+
+    return key;
+}
 
 const NavBar = (props) => {
     let personalCalendar = {
@@ -183,6 +208,19 @@ const NavBar = (props) => {
         setSnackbarOpen(false);
     }
 
+    const mergeCalendars = () => {
+        console.log('merge clicked');
+        setAnchorElUser(null);
+        let mergedCalendar = {
+            id: 'merged',
+            name: 'Merged Calendar',
+            personal: true,
+            collaborators: []
+        }
+        setCurrentCalendar(mergedCalendar);
+        props.changeCalendar(mergedCalendar.id);
+    }
+
     const action = (
         <React.Fragment>
           <IconButton
@@ -194,7 +232,7 @@ const NavBar = (props) => {
             <CloseIcon fontSize="small" />
           </IconButton>
         </React.Fragment>
-      );
+    );
 
     //console.log(displayCalendars);
     return (
@@ -298,6 +336,9 @@ const NavBar = (props) => {
                                 }
                             })
                         }
+                            <MenuItem onClick={mergeCalendars}>
+                                <ListItemText textAlign="left" style={{marginRight: '10px', color: '#8C52FF'}}>Merge Calendars</ListItemText>
+                            </MenuItem>
                         </Menu>
                         <Menu
                         sx={{ mt: '45px' }}

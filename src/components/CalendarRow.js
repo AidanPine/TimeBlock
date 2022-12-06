@@ -45,6 +45,7 @@ const randomKey = (length) => {
 }
 
 const Block = (props) => {
+    const disabled = props.color === 'grey' ? true : false;
     const blockHeight = props.duration*39 + (props.duration-1);
     const [completed, setCompleted] = React.useState(props.completed);
     const [yPos, setYPos] = React.useState(props.yPos);
@@ -73,14 +74,18 @@ const Block = (props) => {
     }
 
     const toggleCompleted = () => {
-        setCompleted(!completed);
-        props.handleCompleted(getBlock(), !completed);
+        if (!disabled) {
+            setCompleted(!completed);
+            props.handleCompleted(getBlock(), !completed);
+        }
     }
 
     const handleDrag = (e, ui) => {
         //console.log(yPos + ui.deltaY);
-        setZIndex(1000);
-        setYPos(yPos + ui.deltaY);
+        if (!disabled) {
+            setZIndex(1000);
+            setYPos(yPos + ui.deltaY);
+        }
     }
 
     const handleStop = () => {
@@ -108,16 +113,17 @@ const Block = (props) => {
                 }}
                 onDrag={handleDrag}
                 onStop={handleStop}
+                disabled={disabled}
             >
                 <div style={{height: blockHeight, backgroundColor: props.color,  textAlign: 'left', width: '100%', display: 'flex', position: 'absolute', cursor: 'pointer', zIndex: zIndex}}>
                     <p style={{color: '#ffffff', width: '70%', alignItems: 'center', display: 'flex', textDecoration: completed ? 'line-through' : ''}}>&nbsp;{props.name}</p>
-                    <IconButton style={{float: 'right', width: '10%'}} onClick={editBlock}>
+                    <IconButton style={{float: 'right', width: '10%'}} onClick={editBlock} disabled={disabled}>
                         <CreateIcon style={{color: '#ffffff'}} />
                     </IconButton>
-                    <IconButton style={{float: 'right', width: '10%'}} onClick={handleDialogOpen}>
+                    <IconButton style={{float: 'right', width: '10%'}} onClick={handleDialogOpen} disabled={disabled}>
                         <DeleteIcon style={{color: '#ffffff'}} />
                     </IconButton>
-                    <Checkbox style={{float: 'right', width: '10%', color: '#ffffff'}} checked={completed} onChange={toggleCompleted} />
+                    <Checkbox style={{float: 'right', width: '10%', color: '#ffffff'}} checked={completed} onChange={toggleCompleted} disabled={disabled} />
                 </div>
             </Draggable>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
