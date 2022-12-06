@@ -104,7 +104,7 @@ const NavBar = (props) => {
     };
 
     const handleClick = () => {
-        navigate("/");
+        navigate("/timeblock");
     };
 
     const handleChange = (e) => {
