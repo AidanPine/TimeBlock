@@ -396,8 +396,8 @@ const NavBar = (props) => {
                                         <Grid container>
                                             <Grid item xs={12}>
                                                 <div className={"container"}>
-                                                    {values.map((item,index) => (
-                                                        <Chip  size="small" onDelete={()=>handleDelete(item,index)} label={item}/>
+                                                    {currentCalendar.id !== 0 && values.map((item,index) => (
+                                                        <Chip size="small" onDelete={()=>handleDelete(item,index)} label={item}/>
                                                         ))}
                                                 </div>
                                             </Grid>

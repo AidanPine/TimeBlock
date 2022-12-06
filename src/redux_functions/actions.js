@@ -46,6 +46,7 @@ export const signIn = (credentials) => {
 export const signOut = () => {
     return (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
+        flags.personalBlockFlag = 1;
 
         firebase.auth().signOut().then(() => {
             dispatch(ActionCreators.logout());
