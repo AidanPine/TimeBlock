@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/TimeBlock/static/css/main.6d8fdba6.css",
+    "main.js": "/TimeBlock/static/js/main.1005def4.js",
+    "static/js/787.844d3879.chunk.js": "/TimeBlock/static/js/787.844d3879.chunk.js",
+    "index.html": "/TimeBlock/index.html",
+    "main.6d8fdba6.css.map": "/TimeBlock/static/css/main.6d8fdba6.css.map",
+    "main.1005def4.js.map": "/TimeBlock/static/js/main.1005def4.js.map",
+    "787.844d3879.chunk.js.map": "/TimeBlock/static/js/787.844d3879.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6d8fdba6.css",
+    "static/js/main.1005def4.js"
+  ]
+}
