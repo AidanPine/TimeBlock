@@ -7,9 +7,9 @@ function App() {
  return (
     <Router>
        <Routes>
-            <Route path="/timeblock" element={<Home />} />
+            <Route path="/TimeBlock" element={<Home />} />
 
-            <Route path="/timeblock/dashboard" element={<Dashboard />} />
+            <Route path="/TimeBlock/dashboard" element={<Dashboard />} />
 
        </Routes>
     </Router>
